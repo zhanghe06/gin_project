@@ -1,0 +1,9 @@
+{
+  "language": "zh-hans",
+  "title": "Gin 最佳实践",
+  "author": "空ping子",
+  "plugins": [
+    "todo",
+    "mermaid-full@>=0.5.1"
+  ]
+}

@@ -1,0 +1,12 @@
+Debug: true
+Ver: "v1"
+MySQL:
+  User: "root"
+  Password: "123456"
+  Ip: "127.0.0.1"
+  Port: "3306"
+  Name: "gin_project"
+  Charset: "utf8"
+BasicAuth:
+  Username: "foo"
+  Password: "bar"

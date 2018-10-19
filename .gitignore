@@ -1,0 +1,16 @@
+.idea/
+logs/*.log
+
+
+# gitbook
+docs/_book/*
+docs/node_modules
+docs/package-lock.json
+
+# vendor
+vendor/*
+!vendor/vendor.json
+
+.coverage
+htmlcov/
+.coveralls.yml

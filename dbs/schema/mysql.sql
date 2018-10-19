@@ -1,0 +1,19 @@
+DROP DATABASE IF EXISTS `gin_project`;
+CREATE DATABASE `gin_project` /*!40100 DEFAULT CHARACTER SET utf8 */;
+
+
+use gin_project;
+
+
+DROP TABLE IF EXISTS `daily_sentence`;
+CREATE TABLE `daily_sentence` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `author` VARCHAR(20) NOT NULL DEFAULT '' COMMENT '作者',
+  `title` VARCHAR(100) NOT NULL DEFAULT '' COMMENT '标题',
+  `classification` VARCHAR(20) NOT NULL DEFAULT '' COMMENT '类型',
+  `status_delete` TINYINT NOT NULL DEFAULT 0 COMMENT '删除状态（0:未删除,1:已删除）',
+  `delete_time` TIMESTAMP NULL COMMENT '删除时间',
+  `create_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='每日一句';
