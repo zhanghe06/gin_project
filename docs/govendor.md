@@ -24,6 +24,11 @@ govendor add +e
 govendor sync
 ```
 
+更新项目依赖
+```
+govendor add +e
+```
+
 中国特色依赖
 
 ```
@@ -45,4 +50,20 @@ mkdir -p $GOPATH/src/golang.org/x
 git clone git@github.com:golang/crypto.git $GOPATH/src/golang.org/x/crypto
 git clone git@github.com:golang/sys.git $GOPATH/src/golang.org/x/sys
 git clone git@github.com:golang/text.git $GOPATH/src/golang.org/x/text
+```
+
+或者 科学上网方式（推荐），shadowsocks 开启http代理服务器
+
+`go get`之前导入代理环境变量
+
+临时设置
+```
+export http_proxy=http://127.0.0.1:1087
+export https_proxy=http://127.0.0.1:1087
+```
+
+临时取消
+```
+unset http_proxy
+unset https_proxy
 ```

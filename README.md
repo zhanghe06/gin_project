@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/zhanghe06/gin_project.svg?branch=master)](https://travis-ci.org/zhanghe06/gin_project)
 [![Coverage Status](https://coveralls.io/repos/github/zhanghe06/gin_project/badge.svg?branch=master)](https://coveralls.io/github/zhanghe06/gin_project?branch=master)
-
+[![The MIT License](http://img.shields.io/badge/license-MIT-green.svg)](https://github.com/zhanghe06/gin_project/blob/master/LICENSE)
 
 获取本项目
 ```

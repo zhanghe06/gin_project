@@ -6,5 +6,5 @@
 * [GoVendor](govendor.md)
 * [LogRus](logrus.md)
 * [PFlag](pflag.md)
-* [viper](viper.md)
+* [Viper](viper.md)
 
