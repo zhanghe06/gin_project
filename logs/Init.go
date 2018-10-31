@@ -8,6 +8,10 @@ import (
 )
 
 var LogFields log.Fields
+var Logger *log.Logger
+
+//var loggerDb = log.New()
+//var loggerElk = log.New()
 
 func Init() (err error) {
 	f, err := os.OpenFile("logs/app.log", os.O_WRONLY | os.O_CREATE, 0755)

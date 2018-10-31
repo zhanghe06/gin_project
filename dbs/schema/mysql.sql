@@ -11,6 +11,7 @@ CREATE TABLE `daily_sentence` (
   `author` VARCHAR(20) NOT NULL DEFAULT '' COMMENT '作者',
   `title` VARCHAR(100) NOT NULL DEFAULT '' COMMENT '标题',
   `classification` VARCHAR(20) NOT NULL DEFAULT '' COMMENT '类型',
+  `score` TINYINT NOT NULL DEFAULT 0 COMMENT '分数（0-5）',
   `status_delete` TINYINT NOT NULL DEFAULT 0 COMMENT '删除状态（0:未删除,1:已删除）',
   `delete_time` TIMESTAMP NULL COMMENT '删除时间',
   `create_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',

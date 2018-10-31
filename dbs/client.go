@@ -31,7 +31,8 @@ func Init() (err error) {
 	if err != nil {
 		return err
 	}
-	DbClient.SingularTable(true)
+	DbClient.SingularTable(true)				// 不考虑表名单复数变化
+	DbClient.LogMode(viper.GetBool("debug"))	// 是否显示sql语句
 	return
 }
 

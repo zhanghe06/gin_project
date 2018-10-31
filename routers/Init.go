@@ -27,6 +27,8 @@ func Init() *gin.Engine {
 	RegisterAbout()
 	RegisterDailySentence()
 	RegisterToken()
+	RegisterInfo()
+	RegisterDownload()
 
 	return Router
 }
