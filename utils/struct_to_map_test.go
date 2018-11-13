@@ -15,5 +15,5 @@ func TestStruct2Map(t *testing.T) {
 	testValue := 2
 	scoreStruct.Score = testValue
 	scoreMap := Struct2Map(scoreStruct)
-	assert.Equal(t, scoreMap, map[string]interface{}{"Score": testValue})
+	assert.Equal(t, scoreMap, map[string]interface{}{"score": testValue})
 }
