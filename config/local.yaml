@@ -10,3 +10,7 @@ MySQL:
 BasicAuth:
   Username: "foo"
   Password: "bar"
+Etcd:
+  Endpoints:
+    - 127.0.0.1:2379
+  Timeout: 5

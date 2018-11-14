@@ -9,19 +9,20 @@ import (
 
 var LogFields log.Fields
 var Logger *log.Logger
+var F *os.File
 
 //var loggerDb = log.New()
 //var loggerElk = log.New()
 
 func Init() (err error) {
-	f, err := os.OpenFile("logs/app.log", os.O_WRONLY | os.O_CREATE, 0755)
+	F, err := os.OpenFile("logs/app.log", os.O_WRONLY | os.O_CREATE, 0755)
 	if err != nil {
 		return err
 	}
 	debug := viper.GetBool("debug")
 	// 生产环境写入文件
 	if debug == false{
-		log.SetOutput(f)
+		log.SetOutput(F)
 		gin.SetMode(gin.ReleaseMode)
 	}
 	// 开发环境标准输出（默认）DEBUG模式
@@ -34,4 +35,8 @@ func Init() (err error) {
 	log.WithFields(LogFields)
 
 	return
+}
+
+func Close() {
+	F.Close()
 }

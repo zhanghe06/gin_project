@@ -1,7 +1,7 @@
 package tests
 
 import (
-	"fmt"
+	"github.com/magiconair/properties/assert"
 	"testing"
 	"time"
 )
@@ -14,7 +14,12 @@ func getCurrentUTCTime() string {
 	return time.Now().UTC().Format("2006-01-06 15:04:05")
 }
 
-func TestTime(t *testing.T) {
-	fmt.Println(getCurrentTime())
-	fmt.Println(getCurrentUTCTime())
+func TestGetCurrentTime(t *testing.T) {
+	currentTime := getCurrentTime()
+	assert.Equal(t, currentTime, time.Now().Format("2006-01-06 15:04:05"))
+}
+
+func TestGetCurrentUTCTime(t *testing.T) {
+	currentUTCTime := getCurrentUTCTime()
+	assert.Equal(t, currentUTCTime, time.Now().UTC().Format("2006-01-06 15:04:05"))
 }

@@ -39,6 +39,13 @@ func Init() (err error) {
 	DbClient.DB().SetMaxOpenConns(5)
 	DbClient.DB().SetMaxIdleConns(10)
 	DbClient.DB().SetConnMaxLifetime(500 * time.Second)
+	// maxBadConnRetries 默认重试2次
+
+	// 因为连接惰性创建, 这里预先创建
+	err = DbClient.DB().Ping()
+	if err != nil{
+		return err
+	}
 
 	return
 }

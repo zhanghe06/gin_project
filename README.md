@@ -101,6 +101,16 @@ https://github.com/go-gormigrate/gormigrate
 
 https://github.com/qor/validations
 
+
+## etcd
+
+https://github.com/etcd-io/etcd/tree/master/clientv3
+
+```
+go get -u go.etcd.io/etcd/clientv3
+```
+
+
 ## wrk - a HTTP benchmarking tool
 
 https://github.com/wg/wrk
