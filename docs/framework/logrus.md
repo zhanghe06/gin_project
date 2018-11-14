@@ -2,6 +2,10 @@
 
 https://github.com/sirupsen/logrus
 
+```
+go get -u github.com/sirupsen/logrus
+```
+
 标准库: `log`没有封装
 
 ## 示例

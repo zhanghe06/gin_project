@@ -2,6 +2,10 @@
 
 https://github.com/jinzhu/gorm
 
+```
+go get -u github.com/jinzhu/gorm
+```
+
 ## 示例
 
 main.go
@@ -40,4 +44,25 @@ func main() {
 
 	fmt.Println(p3.FirstName, p3.LastName, )
 }
+```
+
+
+## GOrm 扩展
+
+https://github.com/go-gormigrate/gormigrate
+
+https://github.com/qor/validations
+
+
+## Go-MySQL-Driver
+
+https://github.com/go-sql-driver/mysql
+
+```
+go get -u github.com/go-sql-driver/mysql
+```
+
+## SQLite
+```
+go get -u github.com/mattn/go-sqlite3
 ```

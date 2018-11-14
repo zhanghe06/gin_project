@@ -1,10 +1,21 @@
 # Summary
 
 * [项目说明](README.md)
-* [gin](gin.md)
-* [GOrm](gorm.md)
-* [GoVendor](govendor.md)
-* [LogRus](logrus.md)
-* [PFlag](pflag.md)
-* [Viper](viper.md)
-
+* 整体框架
+    * [Golang](golang.md)
+    * [Gin](framework/gin.md)
+    * [GOrm](framework/gorm.md)
+    * [XOrm](framework/xorm.md)
+    * [LogRus](framework/logrus.md)
+    * [PFlag](framework/pflag.md)
+    * [Viper](framework/viper.md)
+* 服务组件
+    * [MariaDB](service/mariadb.md)
+    * [Redis](service/redis.md)
+    * [ETCD](service/etcd.md)
+* 部署工具
+    * [GoVendor](deploy/govendor.md)
+* 测试工具
+    * [WRK](test/wrk.md)
+* 常用组件
+    * [UUID](uuid.md)
