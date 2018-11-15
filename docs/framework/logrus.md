@@ -85,3 +85,11 @@ func main() {
 	contextLogger.Warn("Me too")
 }
 ```
+
+## RotateLogs 日志切割
+
+https://github.com/lestrrat-go/file-rotatelogs
+
+```
+go get -u github.com/lestrrat-go/file-rotatelogs
+```

@@ -1,16 +1,23 @@
-Debug: true
-Ver: "v1"
-MySQL:
-  User: "root"
-  Password: "123456"
-  Ip: "127.0.0.1"
-  Port: "3306"
-  Name: "gin_project"
-  Charset: "utf8"
-BasicAuth:
-  Username: "foo"
-  Password: "bar"
-Etcd:
-  Endpoints:
-    - 127.0.0.1:2379
-  Timeout: 5
+debug: true
+project:
+  name: "gin_project"
+ver: "v1"
+mysql:
+  user: "root"
+  password: "123456"
+  ip: "127.0.0.1"
+  port: "3306"
+  name: "gin_project"
+  charset: "utf8"
+  max_open_conns: 50
+  max_idle_conns: 10
+  conn_max_lifetime: 500
+basicauth:
+  username: "foo"
+  password: "bar"
+etcd:
+  endpoints:
+  - 127.0.0.1:2379
+  timeout: 5
+log:
+  file_path: "/var/log/gin_project/app.log"

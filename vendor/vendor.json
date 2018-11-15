@@ -230,6 +230,24 @@
 			"revisionTime": "2018-03-08T03:36:59Z"
 		},
 		{
+			"checksumSHA1": "cNqzM4mpAwMb/lBIcMRZx+y7Dl4=",
+			"path": "github.com/lestrrat-go/file-rotatelogs",
+			"revision": "4ce522c92b91beadfd4c77f75dcc06ffe97cf9c6",
+			"revisionTime": "2018-10-19T12:31:06Z"
+		},
+		{
+			"checksumSHA1": "kCiYjWVsI7JrUA9SogAebi2cp00=",
+			"path": "github.com/lestrrat-go/file-rotatelogs/internal/option",
+			"revision": "4ce522c92b91beadfd4c77f75dcc06ffe97cf9c6",
+			"revisionTime": "2018-10-19T12:31:06Z"
+		},
+		{
+			"checksumSHA1": "8GXoz5FPFg8Hj3LjfwhmhvhUXUk=",
+			"path": "github.com/lestrrat-go/strftime",
+			"revision": "8b31f9c59b0feb56c456ce49a7b3d2b2e93a6f18",
+			"revisionTime": "2018-08-21T11:37:35Z"
+		},
+		{
 			"checksumSHA1": "AYZGozgchqe4WcKH/jCZI1flnP8=",
 			"path": "github.com/magiconair/properties",
 			"revision": "c2353362d570a7bfa228149c62842019201cfb71",
@@ -258,6 +276,12 @@
 			"path": "github.com/pelletier/go-toml",
 			"revision": "c2dbbc24a97911339e01bda0b8cabdbd8f13b602",
 			"revisionTime": "2018-07-24T18:49:33Z"
+		},
+		{
+			"checksumSHA1": "DTy0iJ2w5C+FDsN9EnzfhNmvS+o=",
+			"path": "github.com/pkg/errors",
+			"revision": "059132a15dd08d6704c67711dae0cf35ab991756",
+			"revisionTime": "2018-10-23T23:59:46Z"
 		},
 		{
 			"checksumSHA1": "eDQ6f1EsNf+frcRO/9XukSEchm8=",

@@ -8,11 +8,10 @@ import (
 	"time"
 )
 
-
 var DbClient *gorm.DB
 
 func Init() (err error) {
-	if DbClient != nil{
+	if DbClient != nil {
 		return
 	}
 
@@ -32,27 +31,26 @@ func Init() (err error) {
 	if err != nil {
 		return err
 	}
-	DbClient.SingularTable(true)				// 不考虑表名单复数变化
-	DbClient.LogMode(viper.GetBool("debug"))	// 是否显示sql语句
+	DbClient.SingularTable(true)             // 不考虑表名单复数变化
+	DbClient.LogMode(viper.GetBool("debug")) // 是否显示sql语句
 
 	// 连接池配置
-	DbClient.DB().SetMaxOpenConns(5)
-	DbClient.DB().SetMaxIdleConns(10)
-	DbClient.DB().SetConnMaxLifetime(500 * time.Second)
+	DbClient.DB().SetMaxOpenConns(viper.GetInt("mysql.max_open_conns"))                                    // 默认值0，无限制
+	DbClient.DB().SetMaxIdleConns(viper.GetInt("mysql.max_idle_conns"))                                    // 默认值2
+	DbClient.DB().SetConnMaxLifetime(time.Duration(viper.GetInt("mysql.conn_max_lifetime")) * time.Second) // 默认值0，永不过期
 	// maxBadConnRetries 默认重试2次
 
-	// 因为连接惰性创建, 这里预先创建
+	// 因为连接惰性创建, 这里预先创建1个连接
 	err = DbClient.DB().Ping()
-	if err != nil{
+	if err != nil {
 		return err
 	}
 
 	return
 }
 
-
-func Close() (err error)  {
-	if DbClient != nil{
+func Close() (err error) {
+	if DbClient != nil {
 		err = DbClient.Close()
 		return err
 	}
