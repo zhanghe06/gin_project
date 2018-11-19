@@ -1,6 +1,7 @@
 package main
 
 import (
+	log "github.com/sirupsen/logrus"
 	"github.com/zhanghe06/gin_project/config"
 	"github.com/zhanghe06/gin_project/dbs"
 	"github.com/zhanghe06/gin_project/etcds"
@@ -16,21 +17,21 @@ func main() {
 	// 初始化日志
 	err := logs.Init()
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 	defer logs.Close()
 
 	// 初始化数据库
 	err = dbs.Init()
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 	defer dbs.Close()
 
 	// 初始化ETCD
 	err = etcds.Init()
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 	defer etcds.Close()
 

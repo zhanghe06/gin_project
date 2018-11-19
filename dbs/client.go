@@ -5,6 +5,7 @@ import (
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	"github.com/spf13/viper"
+	"strings"
 	"time"
 )
 
@@ -16,7 +17,7 @@ func Init() (err error) {
 	}
 
 	dbStr := fmt.Sprintf(
-		"%s:%s@(%s:%s)/%s?charset=%s&parseTime=%t&loc=%s",
+		"%s:%s@tcp(%s:%s)/%s?charset=%s&parseTime=%t&loc=%s",
 		viper.GetString("mysql.user"),
 		viper.GetString("mysql.password"),
 		viper.GetString("mysql.ip"),
@@ -26,6 +27,19 @@ func Init() (err error) {
 		true,
 		"Local",
 	)
+	// 超时配置
+	timeout := viper.GetString("mysql.timeout")
+	if timeout != "" {
+		dbStr = strings.Join([]string{dbStr, fmt.Sprintf("timeout=%s", timeout)}, "&")
+	}
+	readTimeout := viper.GetString("mysql.timeout_read")
+	if readTimeout != "" {
+		dbStr = strings.Join([]string{dbStr, fmt.Sprintf("readTimeout=%s", readTimeout)}, "&")
+	}
+	writeTimeout := viper.GetString("mysql.timeout_write")
+	if writeTimeout != "" {
+		dbStr = strings.Join([]string{dbStr, fmt.Sprintf("writeTimeout=%s", writeTimeout)}, "&")
+	}
 
 	DbClient, err = gorm.Open("mysql", dbStr)
 	if err != nil {

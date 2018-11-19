@@ -14,9 +14,10 @@ func Struct2Map(obj interface{}) map[string]interface{} {
 		if dataKey == "" {
 			dataKey = SnakeString(t.Field(i).Name)
 		}
-		dataValue := t.Field(i).Tag.Get("default")
+		dataValue := v.Field(i).Interface()
+		// TODO fix value type
 		if dataValue == "" {
-			dataValue = v.Field(i).Interface().(string)
+			dataValue = t.Field(i).Tag.Get("default")
 		}
 		data[dataKey] = dataValue
 	}

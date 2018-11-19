@@ -9,12 +9,13 @@ import (
 	"time"
 )
 
-var LogFields log.Fields
-var Logger *log.Logger
+//var LogFields log.Fields
+var Logger *log.Entry
 //var F *os.File				// 普通文件
 var Fl *rotatelogs.RotateLogs   // 日志切割
 
 func Init() (err error) {
+	logger := log.New()
 	// 普通文件
 	//F, err := os.OpenFile("logs/app.log", os.O_CREATE | os.O_APPEND | os.O_WRONLY, 0755)
 	//if err != nil {
@@ -36,17 +37,17 @@ func Init() (err error) {
 	// 生产环境写入文件
 	if debug == false {
 		//log.SetOutput(F)	// 普通文件
-		log.SetOutput(Fl) // 日志切割
+		logger.SetOutput(Fl) // 日志切割
 		gin.SetMode(gin.ReleaseMode)
 	}
 	// 开发环境标准输出（默认）DEBUG模式
 
-	LogFields = log.Fields{
+	logFields := log.Fields{
 		"project": viper.GetString("project.name"),
 	}
-	log.SetFormatter(&log.JSONFormatter{})
-	log.SetLevel(log.InfoLevel)
-	log.WithFields(LogFields)
+	logger.SetFormatter(&log.JSONFormatter{})
+	logger.SetLevel(log.InfoLevel)
+	Logger = logger.WithFields(logFields)
 
 	return
 }

@@ -4,7 +4,6 @@ import (
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
 	_ "github.com/jinzhu/gorm/dialects/mssql"
-	log "github.com/sirupsen/logrus"
 	"github.com/zhanghe06/gin_project/dbs"
 	"github.com/zhanghe06/gin_project/logs"
 	"github.com/zhanghe06/gin_project/models"
@@ -21,7 +20,7 @@ func ListsDailySentenceHandler(c *gin.Context) {
 	if err := dbs.DbClient.Find(&dailySentences).Error; err != nil {
 		c.AbortWithStatus(http.StatusNotFound)
 		//fmt.Println(err)
-		log.WithFields(logs.LogFields).Error(err)
+		logs.Logger.Error(err)
 		return
 	}
 	c.JSON(http.StatusOK, dailySentences)
@@ -37,7 +36,7 @@ func GetDailySentenceHandler(c *gin.Context) {
 	if err := dbs.DbClient.Where("id = ?", id).First(&dailySentence).Error; err != nil {
 		c.AbortWithStatus(http.StatusNotFound)
 		//fmt.Println(err)
-		log.WithFields(logs.LogFields).Error(err)
+		logs.Logger.Error(err)
 		return
 	}
 	c.JSON(http.StatusOK, dailySentence)
@@ -51,7 +50,7 @@ func CreateDailySentenceHandler(c *gin.Context) {
 	if err := dbs.DbClient.Create(&dailySentence).Error; err != nil {
 		c.AbortWithStatus(http.StatusBadRequest)
 		//fmt.Println(err)
-		log.WithFields(logs.LogFields).Error(err)
+		logs.Logger.Error(err)
 		return
 	}
 	c.JSON(http.StatusOK, dailySentence)
@@ -65,14 +64,14 @@ func UpdateDailySentenceHandler(c *gin.Context) {
 	if err := dbs.DbClient.Where("id = ?", id).First(&dailySentence).Error; err != nil {
 		c.AbortWithStatus(http.StatusNotFound)
 		//fmt.Println(err)
-		log.WithFields(logs.LogFields).Error(err)
+		logs.Logger.Error(err)
 		return
 	}
 	c.BindJSON(&dailySentence)
 	if err := dbs.DbClient.Save(&dailySentence).Error; err != nil {
 		c.AbortWithStatus(http.StatusBadRequest)
 		//fmt.Println(err)
-		log.WithFields(logs.LogFields).Error(err)
+		logs.Logger.Error(err)
 		return
 	}
 	c.JSON(http.StatusOK, dailySentence)
@@ -86,7 +85,7 @@ func DeleteDailySentenceHandler(c *gin.Context) {
 	if err := dbs.DbClient.Where("id = ?", id).Delete(&dailySentence).Error; err != nil {
 		c.AbortWithStatus(http.StatusNotFound)
 		//fmt.Println(err)
-		log.WithFields(logs.LogFields).Error(err)
+		logs.Logger.Error(err)
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"id #" + id: " has deleted"})
@@ -100,6 +99,7 @@ func ScoreDailySentenceHandler(c *gin.Context) {
 	err := c.ShouldBindJSON(&scoreDailySentenceRequests)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		logs.Logger.Error(err)
 		return
 	}
 
@@ -110,7 +110,7 @@ func ScoreDailySentenceHandler(c *gin.Context) {
 	if err := dbs.DbClient.First(&dailySentence, id).Error; err != nil {
 		c.AbortWithStatus(http.StatusNotFound)
 		//fmt.Println(err)
-		log.WithFields(logs.LogFields).Error(err)
+		logs.Logger.Error(err)
 		return
 	}
 
@@ -120,7 +120,7 @@ func ScoreDailySentenceHandler(c *gin.Context) {
 	if err = res.Error; err != nil {
 		c.AbortWithStatus(http.StatusBadRequest)
 		//fmt.Println(err)
-		log.WithFields(logs.LogFields).Error(err)
+		logs.Logger.Error(err)
 		return
 	}
 	// 注意: 这里的res.Value和dailySentence一样, 更新的字段仅为updates传入的参数, 其余数据库自动修改的字段不会更新到这里

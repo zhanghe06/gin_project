@@ -62,6 +62,11 @@ https://github.com/go-sql-driver/mysql
 go get -u github.com/go-sql-driver/mysql
 ```
 
+连接超时、读取超时、写入超时设置
+
+https://github.com/go-sql-driver/mysql#connection-pool-and-timeouts
+
+
 ## SQLite
 ```
 go get -u github.com/mattn/go-sqlite3
