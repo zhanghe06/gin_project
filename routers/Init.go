@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
+	"github.com/zhanghe06/gin_project/middlewares"
 )
 
 var Router *gin.Engine
@@ -12,7 +13,13 @@ var VerToken *gin.RouterGroup
 
 func Init() *gin.Engine {
 	// 创建路由
-	Router = gin.Default()
+	Router = gin.New()
+	Router.Use(
+		//gin.Logger(),
+		middlewares.LoggingMiddleware(),
+		middlewares.RecoveryMiddleware(),
+		middlewares.RequestIdMiddleware(),
+	)
 
 	ver := fmt.Sprintf("/%s", viper.GetString("ver"))
 	accounts := gin.Accounts{
@@ -20,7 +27,9 @@ func Init() *gin.Engine {
 	}
 
 	Ver = Router.Group(ver)
+
 	VerToken = Router.Group(ver, gin.BasicAuth(accounts))
+	VerToken.Use(middlewares.RequestIpMiddleware())
 
 	// 注册路由
 	RegisterIndex()

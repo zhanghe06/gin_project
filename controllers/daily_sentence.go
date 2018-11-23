@@ -1,11 +1,11 @@
 package controllers
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
 	_ "github.com/jinzhu/gorm/dialects/mssql"
 	"github.com/zhanghe06/gin_project/dbs"
-	"github.com/zhanghe06/gin_project/logs"
 	"github.com/zhanghe06/gin_project/models"
 	"github.com/zhanghe06/gin_project/requests"
 	"github.com/zhanghe06/gin_project/utils"
@@ -15,12 +15,18 @@ import (
 // 获取列表
 // curl -i -X GET http://0.0.0.0:8080/v1/daily_sentences
 func ListsDailySentenceHandler(c *gin.Context) {
+	// 意外异常
+	defer func(c *gin.Context) {
+		if rec := recover(); rec != nil {
+			err := fmt.Errorf("%v", rec)
+			c.AbortWithError(http.StatusInternalServerError, err)
+		}
+	}(c)
+
 	var dailySentences []models.DailySentence
 
 	if err := dbs.DbClient.Find(&dailySentences).Error; err != nil {
 		c.AbortWithStatus(http.StatusNotFound)
-		//fmt.Println(err)
-		logs.Logger.Error(err)
 		return
 	}
 	c.JSON(http.StatusOK, dailySentences)
@@ -30,13 +36,19 @@ func ListsDailySentenceHandler(c *gin.Context) {
 // 获取详情
 // curl -i -X GET http://0.0.0.0:8080/v1/daily_sentence/1
 func GetDailySentenceHandler(c *gin.Context) {
+	// 意外异常
+	defer func(c *gin.Context) {
+		if rec := recover(); rec != nil {
+			err := fmt.Errorf("%v", rec)
+			c.AbortWithError(http.StatusInternalServerError, err)
+		}
+	}(c)
+
 	id := c.Params.ByName("id")
 	var dailySentence models.DailySentence
 
 	if err := dbs.DbClient.Where("id = ?", id).First(&dailySentence).Error; err != nil {
 		c.AbortWithStatus(http.StatusNotFound)
-		//fmt.Println(err)
-		logs.Logger.Error(err)
 		return
 	}
 	c.JSON(http.StatusOK, dailySentence)
@@ -45,12 +57,18 @@ func GetDailySentenceHandler(c *gin.Context) {
 // 创建记录
 // curl -i -X POST http://0.0.0.0:8080/v1/daily_sentence -d '{"Author": "Tom", "Title": "this is a test", "Classification": "news"}'
 func CreateDailySentenceHandler(c *gin.Context) {
+	// 意外异常
+	defer func(c *gin.Context) {
+		if rec := recover(); rec != nil {
+			err := fmt.Errorf("%v", rec)
+			c.AbortWithError(http.StatusInternalServerError, err)
+		}
+	}(c)
+
 	var dailySentence models.DailySentence
 	c.BindJSON(&dailySentence)
 	if err := dbs.DbClient.Create(&dailySentence).Error; err != nil {
 		c.AbortWithStatus(http.StatusBadRequest)
-		//fmt.Println(err)
-		logs.Logger.Error(err)
 		return
 	}
 	c.JSON(http.StatusOK, dailySentence)
@@ -59,19 +77,23 @@ func CreateDailySentenceHandler(c *gin.Context) {
 // 更新记录
 // curl -i -X PUT http://0.0.0.0:8080/v1/daily_sentence/1 -d '{"Author": "Tom"}'
 func UpdateDailySentenceHandler(c *gin.Context) {
+	// 意外异常
+	defer func(c *gin.Context) {
+		if rec := recover(); rec != nil {
+			err := fmt.Errorf("%v", rec)
+			c.AbortWithError(http.StatusInternalServerError, err)
+		}
+	}(c)
+
 	var dailySentence models.DailySentence
 	id := c.Params.ByName("id")
 	if err := dbs.DbClient.Where("id = ?", id).First(&dailySentence).Error; err != nil {
 		c.AbortWithStatus(http.StatusNotFound)
-		//fmt.Println(err)
-		logs.Logger.Error(err)
 		return
 	}
 	c.BindJSON(&dailySentence)
 	if err := dbs.DbClient.Save(&dailySentence).Error; err != nil {
 		c.AbortWithStatus(http.StatusBadRequest)
-		//fmt.Println(err)
-		logs.Logger.Error(err)
 		return
 	}
 	c.JSON(http.StatusOK, dailySentence)
@@ -80,12 +102,18 @@ func UpdateDailySentenceHandler(c *gin.Context) {
 // 删除记录
 // curl -i -X DELETE http://0.0.0.0:8080/v1/daily_sentence/2
 func DeleteDailySentenceHandler(c *gin.Context) {
+	// 意外异常
+	defer func(c *gin.Context) {
+		if rec := recover(); rec != nil {
+			err := fmt.Errorf("%v", rec)
+			c.AbortWithError(http.StatusInternalServerError, err)
+		}
+	}(c)
+
 	id := c.Params.ByName("id")
 	var dailySentence models.DailySentence
 	if err := dbs.DbClient.Where("id = ?", id).Delete(&dailySentence).Error; err != nil {
 		c.AbortWithStatus(http.StatusNotFound)
-		//fmt.Println(err)
-		logs.Logger.Error(err)
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"id #" + id: " has deleted"})
@@ -94,12 +122,19 @@ func DeleteDailySentenceHandler(c *gin.Context) {
 // 打分
 // curl -i -X PATCH http://0.0.0.0:8080/v1/daily_sentence/1/score -d '{"score": 0}'
 func ScoreDailySentenceHandler(c *gin.Context) {
+	// 意外异常
+	defer func(c *gin.Context) {
+		if rec := recover(); rec != nil {
+			err := fmt.Errorf("%v", rec)
+			c.AbortWithError(http.StatusInternalServerError, err)
+		}
+	}(c)
+
 	// 参数校验
 	var scoreDailySentenceRequests requests.ScoreDailySentenceRequests
 	err := c.ShouldBindJSON(&scoreDailySentenceRequests)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		logs.Logger.Error(err)
+		c.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
 
@@ -107,10 +142,8 @@ func ScoreDailySentenceHandler(c *gin.Context) {
 	var dailySentence models.DailySentence
 	id := c.Params.ByName("id")
 	//if err := dbs.DbClient.Where("id = ?", id).First(&dailySentence).Error; err != nil {
-	if err := dbs.DbClient.First(&dailySentence, id).Error; err != nil {
-		c.AbortWithStatus(http.StatusNotFound)
-		//fmt.Println(err)
-		logs.Logger.Error(err)
+	if err := dbs.DbClient.First(&dailySentence, id).Error; err != nil { // 此种写法仅仅支持整形主键
+		c.AbortWithError(http.StatusNotFound, err)
 		return
 	}
 
@@ -118,9 +151,7 @@ func ScoreDailySentenceHandler(c *gin.Context) {
 	data := utils.Struct2Map(scoreDailySentenceRequests)
 	res := dbs.DbClient.Model(&dailySentence).Updates(data)
 	if err = res.Error; err != nil {
-		c.AbortWithStatus(http.StatusBadRequest)
-		//fmt.Println(err)
-		logs.Logger.Error(err)
+		c.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
 	// 注意: 这里的res.Value和dailySentence一样, 更新的字段仅为updates传入的参数, 其余数据库自动修改的字段不会更新到这里
