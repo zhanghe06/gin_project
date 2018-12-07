@@ -7,6 +7,7 @@ func RegisterDailySentence() {
 	Ver.GET("/daily_sentence/:id", controllers.GetDailySentenceHandler)
 	Ver.POST("/daily_sentence", controllers.CreateDailySentenceHandler)
 	Ver.PUT("/daily_sentence/:id", controllers.UpdateDailySentenceHandler)
+	Ver.PUT("/daily_sentence/:id/title", controllers.ReTitleDailySentenceHandler)
 	Ver.DELETE("/daily_sentence/:id", controllers.DeleteDailySentenceHandler)
 	Ver.PATCH("/daily_sentence/:id/score", controllers.ScoreDailySentenceHandler)
 }

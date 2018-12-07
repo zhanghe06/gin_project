@@ -10,6 +10,7 @@ import (
 	"github.com/zhanghe06/gin_project/requests"
 	"github.com/zhanghe06/gin_project/utils"
 	"net/http"
+	"time"
 )
 
 // 获取列表
@@ -66,7 +67,7 @@ func CreateDailySentenceHandler(c *gin.Context) {
 	}(c)
 
 	var dailySentence models.DailySentence
-	c.BindJSON(&dailySentence)
+	c.ShouldBindJSON(&dailySentence)
 	if err := dbs.DbClient.Create(&dailySentence).Error; err != nil {
 		c.AbortWithStatus(http.StatusBadRequest)
 		return
@@ -86,14 +87,60 @@ func UpdateDailySentenceHandler(c *gin.Context) {
 	}(c)
 
 	var dailySentence models.DailySentence
+
 	id := c.Params.ByName("id")
 	if err := dbs.DbClient.Where("id = ?", id).First(&dailySentence).Error; err != nil {
-		c.AbortWithStatus(http.StatusNotFound)
+		c.AbortWithError(http.StatusNotFound, err)
 		return
 	}
-	c.BindJSON(&dailySentence)
+
+	// 解析参数, 注意顺序, 放在获取数据之后
+	err := c.ShouldBindJSON(&dailySentence)
+	if err != nil {
+		c.AbortWithError(http.StatusBadRequest, err)
+		return
+	}
+
+	// 保存所有字段
 	if err := dbs.DbClient.Save(&dailySentence).Error; err != nil {
-		c.AbortWithStatus(http.StatusBadRequest)
+		c.AbortWithError(http.StatusBadRequest, err)
+		return
+	}
+	c.JSON(http.StatusOK, dailySentence)
+}
+
+// 修改记录标题
+// curl -i -X PUT http://0.0.0.0:8080/v1/daily_sentence/1/title -d '{"title": "测试更换标题"}'
+func ReTitleDailySentenceHandler(c *gin.Context) {
+	// 意外异常
+	defer func(c *gin.Context) {
+		if rec := recover(); rec != nil {
+			err := fmt.Errorf("%v", rec)
+			c.AbortWithError(http.StatusInternalServerError, err)
+		}
+	}(c)
+
+	var reTitleRequests requests.ReTitleRequests
+	err := c.ShouldBindJSON(&reTitleRequests)
+	if err != nil {
+		c.AbortWithError(http.StatusBadRequest, err)
+		return
+	}
+
+	id := c.Params.ByName("id")
+	var dailySentence models.DailySentence
+	if err := dbs.DbClient.Where("id = ?", id).First(&dailySentence).Error; err != nil {
+		c.AbortWithError(http.StatusNotFound, err)
+		return
+	}
+
+	updateData := models.DailySentence{
+		Title: reTitleRequests.Title,
+		UpdateTime: time.Now(),
+	}
+	// 更新指定字段
+	if err := dbs.DbClient.Model(&dailySentence).UpdateColumns(updateData).Error; err != nil {
+		c.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
 	c.JSON(http.StatusOK, dailySentence)

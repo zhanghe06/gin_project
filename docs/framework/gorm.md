@@ -71,3 +71,10 @@ https://github.com/go-sql-driver/mysql#connection-pool-and-timeouts
 ```
 go get -u github.com/mattn/go-sqlite3
 ```
+
+
+## Gorm 操作文档
+
+http://gorm.io/docs/update.html
+
+.RowsAffected    受影响行数
