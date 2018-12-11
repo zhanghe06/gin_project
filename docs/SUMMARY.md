@@ -15,6 +15,7 @@
     * [ETCD](service/etcd.md)
 * 部署工具
     * [GoVendor](deploy/govendor.md)
+    * [Build](deploy/build.md)
 * 测试工具
     * [WRK](test/wrk.md)
 * 常用组件
