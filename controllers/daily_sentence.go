@@ -27,7 +27,7 @@ func ListsDailySentenceHandler(c *gin.Context) {
 	var dailySentences []models.DailySentence
 
 	if err := dbs.DbClient.Find(&dailySentences).Error; err != nil {
-		c.AbortWithStatus(http.StatusNotFound)
+		c.AbortWithError(http.StatusNotFound, err)
 		return
 	}
 	c.JSON(http.StatusOK, dailySentences)
@@ -45,11 +45,12 @@ func GetDailySentenceHandler(c *gin.Context) {
 		}
 	}(c)
 
-	id := c.Params.ByName("id")
+	//id := c.Params.ByName("id")
+	id := c.Param("id")
 	var dailySentence models.DailySentence
 
 	if err := dbs.DbClient.Where("id = ?", id).First(&dailySentence).Error; err != nil {
-		c.AbortWithStatus(http.StatusNotFound)
+		c.AbortWithError(http.StatusNotFound, err)
 		return
 	}
 	c.JSON(http.StatusOK, dailySentence)
@@ -88,7 +89,8 @@ func UpdateDailySentenceHandler(c *gin.Context) {
 
 	var dailySentence models.DailySentence
 
-	id := c.Params.ByName("id")
+	//id := c.Params.ByName("id")
+	id := c.Param("id")
 	if err := dbs.DbClient.Where("id = ?", id).First(&dailySentence).Error; err != nil {
 		c.AbortWithError(http.StatusNotFound, err)
 		return
@@ -127,7 +129,8 @@ func ReTitleDailySentenceHandler(c *gin.Context) {
 		return
 	}
 
-	id := c.Params.ByName("id")
+	//id := c.Params.ByName("id")
+	id := c.Param("id")
 	var dailySentence models.DailySentence
 	if err := dbs.DbClient.Where("id = ?", id).First(&dailySentence).Error; err != nil {
 		c.AbortWithError(http.StatusNotFound, err)
@@ -157,10 +160,20 @@ func DeleteDailySentenceHandler(c *gin.Context) {
 		}
 	}(c)
 
-	id := c.Params.ByName("id")
+	var deleteDailySentenceRequests requests.DeleteDailySentenceRequests
+	err := c.ShouldBindUri(&deleteDailySentenceRequests)
+	if err != nil {
+		c.AbortWithError(http.StatusBadRequest, err)
+		return
+	}
+
+	//id := c.Params.ByName("id")
+	//id := c.Param("id")
+	id := deleteDailySentenceRequests.ID
+
 	var dailySentence models.DailySentence
 	if err := dbs.DbClient.Where("id = ?", id).Delete(&dailySentence).Error; err != nil {
-		c.AbortWithStatus(http.StatusNotFound)
+		c.AbortWithError(http.StatusNotFound, err)
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"id #" + id: " has deleted"})
@@ -187,7 +200,8 @@ func ScoreDailySentenceHandler(c *gin.Context) {
 
 	// 判断记录是否存在
 	var dailySentence models.DailySentence
-	id := c.Params.ByName("id")
+	//id := c.Params.ByName("id")
+	id := c.Param("id")
 	//if err := dbs.DbClient.Where("id = ?", id).First(&dailySentence).Error; err != nil {
 	if err := dbs.DbClient.First(&dailySentence, id).Error; err != nil { // 此种写法仅仅支持整形主键
 		c.AbortWithError(http.StatusNotFound, err)

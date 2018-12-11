@@ -54,6 +54,23 @@ https://github.com/gin-gonic/gin#goroutines-inside-a-middleware
 - required
 - omitempty
 
+### Bind Uri
+
+https://github.com/gin-gonic/gin#bind-uri
+
+```go
+type Person struct {
+	ID string `uri:"id" binding:"required,uuid"`
+	Name string `uri:"name" binding:"required"`
+}
+
+var person Person
+if err := c.ShouldBindUri(&person); err != nil {
+    c.JSON(400, gin.H{"msg": err})
+    return
+}
+```
+
 
 ## The difference between Bind and ShouldBind
 
@@ -68,3 +85,5 @@ Like c.Bind() but this method does not set the response status code to 400 and a
 ```
 
 ShouldBind仅仅中止, 而Bind直接报400
+
+现在 url path 还不支持绑定

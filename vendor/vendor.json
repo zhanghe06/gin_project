@@ -47,28 +47,28 @@
 			"revisionTime": "2017-01-09T09:34:21Z"
 		},
 		{
-			"checksumSHA1": "DTjGyAdqzWj8KJL6poE4JS6jgZM=",
+			"checksumSHA1": "YhkptCfM7E4380A+45N3dYqCNZA=",
 			"path": "github.com/gin-gonic/gin",
-			"revision": "708b76adf011840eb587d57804edf93b2ef4ba75",
-			"revisionTime": "2018-08-30T06:29:26Z"
+			"revision": "cce49582d617333c72f4d86abd8ef0e62eb778a0",
+			"revisionTime": "2018-12-05T05:49:03Z"
 		},
 		{
-			"checksumSHA1": "Uy0yip1D/IPhPoj8qqhuJQtJpXY=",
+			"checksumSHA1": "7qBnth8sypvrAOw4bDQcgS3tU+o=",
 			"path": "github.com/gin-gonic/gin/binding",
-			"revision": "708b76adf011840eb587d57804edf93b2ef4ba75",
-			"revisionTime": "2018-08-30T06:29:26Z"
+			"revision": "cce49582d617333c72f4d86abd8ef0e62eb778a0",
+			"revisionTime": "2018-12-05T05:49:03Z"
 		},
 		{
-			"checksumSHA1": "hMAy5WMKsUJCh5gS+skVDQIwJ7g=",
-			"path": "github.com/gin-gonic/gin/json",
-			"revision": "708b76adf011840eb587d57804edf93b2ef4ba75",
-			"revisionTime": "2018-08-30T06:29:26Z"
+			"checksumSHA1": "Y8Vu2NT4c2ve963fedBxoJyiU6s=",
+			"path": "github.com/gin-gonic/gin/internal/json",
+			"revision": "cce49582d617333c72f4d86abd8ef0e62eb778a0",
+			"revisionTime": "2018-12-05T05:49:03Z"
 		},
 		{
-			"checksumSHA1": "JzWvoH+iqJ0uCoz7Oj8SbGxgxJ0=",
+			"checksumSHA1": "afLqBfX9SeIP6eeTZb3WwdTFaOo=",
 			"path": "github.com/gin-gonic/gin/render",
-			"revision": "708b76adf011840eb587d57804edf93b2ef4ba75",
-			"revisionTime": "2018-08-30T06:29:26Z"
+			"revision": "cce49582d617333c72f4d86abd8ef0e62eb778a0",
+			"revisionTime": "2018-12-05T05:49:03Z"
 		},
 		{
 			"checksumSHA1": "k9izYoyobR8Upb3Yjsw9htgE/Mk=",
@@ -98,10 +98,10 @@
 			"revisionTime": "2018-11-12T22:07:05Z"
 		},
 		{
-			"checksumSHA1": "CbzNfOvaT1G3G9WILmsyjYfYTO0=",
+			"checksumSHA1": "Y2MOwzNZfl4NRNDbLCZa6sgx7O0=",
 			"path": "github.com/golang/protobuf/proto",
-			"revision": "b27b920f9e71b439b873b17bf99f56467623814a",
-			"revisionTime": "2018-08-21T05:17:52Z"
+			"revision": "1d3f30b51784bec5aad268e59fd3c2fc1c2fe73f",
+			"revisionTime": "2018-11-28T19:23:52Z"
 		},
 		{
 			"checksumSHA1": "tkJPssYejSjuAwE2tdEnoEIj93Q=",
@@ -260,10 +260,10 @@
 			"revisionTime": "2018-05-15T20:40:05Z"
 		},
 		{
-			"checksumSHA1": "w5RcOnfv5YDr3j2bd1YydkPiZx4=",
+			"checksumSHA1": "GiVgQkx5acnq+JZtYiuHPlhHoso=",
 			"path": "github.com/mattn/go-isatty",
-			"revision": "6ca4dbf54d38eea1a992b3c722a76a5d1c4cb25c",
-			"revisionTime": "2017-11-07T05:05:31Z"
+			"revision": "3fb116b820352b7f0c281308a4d6250c22d94e27",
+			"revisionTime": "2018-08-30T10:17:45Z"
 		},
 		{
 			"checksumSHA1": "4VVcCBCqn1hvMaURZyPSKqkMc4o=",
@@ -332,10 +332,10 @@
 			"revisionTime": "2018-09-07T13:06:02Z"
 		},
 		{
-			"checksumSHA1": "s/kG3fL3C8puCzkyfmOgwC9gWUY=",
+			"checksumSHA1": "MAzQxLlGpnkO2tPOcQtZX9ciLRM=",
 			"path": "github.com/ugorji/go/codec",
-			"revision": "aa28833c9f9fa49a39beb6969d0651ef6e488290",
-			"revisionTime": "2018-08-29T16:56:55Z"
+			"revision": "772ced7fd4c2f6322c07537a9a93b68d74551fa6",
+			"revisionTime": "2018-12-09T15:14:46Z"
 		},
 		{
 			"checksumSHA1": "8nCoO1ACxWgrtwUl84Se7YIWVMA=",
@@ -470,6 +470,18 @@
 			"path": "go.uber.org/zap/zapcore",
 			"revision": "ee9dcbca0d89dc563c9e6bc725fab0c6f21d689b",
 			"revisionTime": "2018-11-12T22:07:05Z"
+		},
+		{
+			"checksumSHA1": "/pfkYB22L5MtzxrfIHQ0tWylnZw=",
+			"path": "golang.org/x/crypto/acme",
+			"revision": "0709b304e793a5edb4a2c0145f281ecdc20838a4",
+			"revisionTime": "2018-08-31T22:38:59Z"
+		},
+		{
+			"checksumSHA1": "Ayt033DfS42Y57XUoOAZvfGUyaA=",
+			"path": "golang.org/x/crypto/acme/autocert",
+			"revision": "0709b304e793a5edb4a2c0145f281ecdc20838a4",
+			"revisionTime": "2018-08-31T22:38:59Z"
 		},
 		{
 			"checksumSHA1": "MCeXr2RNeiG1XG6V+er1OR0qyeo=",
@@ -773,10 +785,10 @@
 			"revisionTime": "2017-07-30T05:02:35Z"
 		},
 		{
-			"checksumSHA1": "ZSWoOPUNRr5+3dhkLK3C4cZAQPk=",
+			"checksumSHA1": "QqDq2x8XOU7IoOR98Cx1eiV5QY8=",
 			"path": "gopkg.in/yaml.v2",
-			"revision": "5420a8b6744d3b0345ab293f6fcba19c978f1183",
-			"revisionTime": "2018-03-28T19:50:20Z"
+			"revision": "51d6538a90f86fe93ac480b35f37b2be17fef232",
+			"revisionTime": "2018-11-15T11:05:04Z"
 		}
 	],
 	"rootPath": "github.com/zhanghe06/gin_project"
