@@ -78,3 +78,8 @@ go get -u github.com/mattn/go-sqlite3
 http://gorm.io/docs/update.html
 
 .RowsAffected    受影响行数
+
+
+## Transaction
+
+`for update`仅适用于`InnoDB`，且必须在事务块(`BEGIN`/`COMMIT`)中才能生效。

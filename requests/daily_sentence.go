@@ -1,15 +1,19 @@
 package requests
 
-type ScoreDailySentenceRequests struct {
+type ScoreDailySentenceJsonRequests struct {
 	//Score          int       `json:"score" binding:"required"`
 	Score int `json:"score" binding:"exists,gte=0,lte=5"`
 }
 
-type ReTitleRequests struct {
-	//Title          string    `json:"title" binding:"required,ValidatorTitleRepetition"`
-	Title string `json:"title" binding:"required,ValidatorTitleRepetition"`
+type ReTitleJsonRequests struct {
+	//Title string `json:"title" binding:"required,ValidatorUpdateTitleRepetition"`
+	Title string `json:"title" binding:"required"`
 }
 
-type DeleteDailySentenceRequests struct {
-	ID string `uri:"id" binding:"required,uuid"`
+type DeleteDailySentenceUriRequests struct {
+	ID string `uri:"id" binding:"required"`
+}
+
+type ScoreDailySentenceUriRequests struct {
+	ID string `uri:"id" binding:"required"`
 }

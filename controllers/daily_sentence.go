@@ -122,8 +122,8 @@ func ReTitleDailySentenceHandler(c *gin.Context) {
 		}
 	}(c)
 
-	var reTitleRequests requests.ReTitleRequests
-	err := c.ShouldBindJSON(&reTitleRequests)
+	var jsonRequests requests.ReTitleJsonRequests
+	err := c.ShouldBindJSON(&jsonRequests)
 	if err != nil {
 		c.AbortWithError(http.StatusBadRequest, err)
 		return
@@ -131,21 +131,47 @@ func ReTitleDailySentenceHandler(c *gin.Context) {
 
 	//id := c.Params.ByName("id")
 	id := c.Param("id")
+
+	// 开启事务
+	tx := dbs.DbClient.Begin()
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+			// 事务异常传递
+			panic(r)
+		}
+	}()
+
+	if err := tx.Error; err != nil {
+		// 事务异常
+		panic(err)
+	}
+
+	// 判断记录是否存在
 	var dailySentence models.DailySentence
-	if err := dbs.DbClient.Where("id = ?", id).First(&dailySentence).Error; err != nil {
+	if err := tx.Where("id = ?", id).Set("gorm:query_option", "FOR UPDATE").First(&dailySentence).Error; err != nil {
+		tx.Rollback()
 		c.AbortWithError(http.StatusNotFound, err)
 		return
 	}
 
 	updateData := models.DailySentence{
-		Title: reTitleRequests.Title,
+		Title:      jsonRequests.Title,
 		UpdateTime: time.Now(),
 	}
 	// 更新指定字段
-	if err := dbs.DbClient.Model(&dailySentence).UpdateColumns(updateData).Error; err != nil {
+	if err := tx.Model(&dailySentence).UpdateColumns(updateData).Error; err != nil {
+		tx.Rollback()
 		c.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
+
+	// 提交事务
+	if err := tx.Commit().Error; err != nil {
+		// 事务异常
+		panic(err)
+	}
+
 	c.JSON(http.StatusOK, dailySentence)
 }
 
@@ -160,8 +186,8 @@ func DeleteDailySentenceHandler(c *gin.Context) {
 		}
 	}(c)
 
-	var deleteDailySentenceRequests requests.DeleteDailySentenceRequests
-	err := c.ShouldBindUri(&deleteDailySentenceRequests)
+	var uriRequests requests.DeleteDailySentenceUriRequests
+	err := c.ShouldBindUri(&uriRequests)
 	if err != nil {
 		c.AbortWithError(http.StatusBadRequest, err)
 		return
@@ -169,14 +195,14 @@ func DeleteDailySentenceHandler(c *gin.Context) {
 
 	//id := c.Params.ByName("id")
 	//id := c.Param("id")
-	id := deleteDailySentenceRequests.ID
+	id := uriRequests.ID
 
 	var dailySentence models.DailySentence
 	if err := dbs.DbClient.Where("id = ?", id).Delete(&dailySentence).Error; err != nil {
 		c.AbortWithError(http.StatusNotFound, err)
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"id #" + id: " has deleted"})
+	c.JSON(http.StatusNoContent, nil)
 }
 
 // 打分
@@ -191,17 +217,24 @@ func ScoreDailySentenceHandler(c *gin.Context) {
 	}(c)
 
 	// 参数校验
-	var scoreDailySentenceRequests requests.ScoreDailySentenceRequests
-	err := c.ShouldBindJSON(&scoreDailySentenceRequests)
-	if err != nil {
+	var uriRequests requests.ScoreDailySentenceUriRequests
+	if err := c.ShouldBindUri(&uriRequests); err != nil {
 		c.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
 
+	var jsonRequests requests.ScoreDailySentenceJsonRequests
+	if err := c.ShouldBindJSON(&jsonRequests); err != nil {
+		c.AbortWithError(http.StatusBadRequest, err)
+		return
+	}
+
+	//id := c.Params.ByName("id")
+	//id := c.Param("id")
+	id := uriRequests.ID
+
 	// 判断记录是否存在
 	var dailySentence models.DailySentence
-	//id := c.Params.ByName("id")
-	id := c.Param("id")
 	//if err := dbs.DbClient.Where("id = ?", id).First(&dailySentence).Error; err != nil {
 	if err := dbs.DbClient.First(&dailySentence, id).Error; err != nil { // 此种写法仅仅支持整形主键
 		c.AbortWithError(http.StatusNotFound, err)
@@ -209,9 +242,8 @@ func ScoreDailySentenceHandler(c *gin.Context) {
 	}
 
 	// 更新数据
-	data := utils.Struct2Map(scoreDailySentenceRequests)
-	res := dbs.DbClient.Model(&dailySentence).Updates(data)
-	if err = res.Error; err != nil {
+	data := utils.Struct2Map(jsonRequests)
+	if err := dbs.DbClient.Model(&dailySentence).Updates(data).Error; err != nil {
 		c.AbortWithError(http.StatusBadRequest, err)
 		return
 	}

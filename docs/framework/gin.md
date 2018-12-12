@@ -87,3 +87,7 @@ Like c.Bind() but this method does not set the response status code to 400 and a
 ShouldBind仅仅中止, 而Bind直接报400
 
 现在 url path 还不支持绑定
+
+## tag
+
+- dive 用于切片
