@@ -7,7 +7,7 @@ type ScoreDailySentenceJsonRequests struct {
 
 type ReTitleJsonRequests struct {
 	//Title string `json:"title" binding:"required,ValidatorUpdateTitleRepetition"`
-	Title string `json:"title" binding:"required"`
+	Title string `json:"title" binding:"required,validateTitle"`
 }
 
 type DeleteDailySentenceUriRequests struct {

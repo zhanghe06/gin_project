@@ -7,6 +7,7 @@ import (
 	"github.com/zhanghe06/gin_project/etcds"
 	"github.com/zhanghe06/gin_project/logs"
 	"github.com/zhanghe06/gin_project/routers"
+	"github.com/zhanghe06/gin_project/validators"
 )
 
 func main() {
@@ -37,6 +38,12 @@ func main() {
 
 	// 初始化路由
 	router := routers.Init()
+
+	// 注册校验器
+	err = validators.Init()
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	// 启动服务
 	router.Run()
