@@ -19,5 +19,10 @@ etcd:
   endpoints:
   - 127.0.0.1:2379
   timeout: 5
+rabbitmq:
+  username: "guest"
+  password: "guest"
+  ip: "127.0.0.1"
+  port: "5672"
 log:
   file_path: "/tmp/app.log"

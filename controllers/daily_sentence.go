@@ -3,8 +3,8 @@ package controllers
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
-	_ "github.com/go-sql-driver/mysql"
-	_ "github.com/jinzhu/gorm/dialects/mssql"
+	"github.com/go-sql-driver/mysql"
+	"github.com/jinzhu/gorm"
 	"github.com/zhanghe06/gin_project/dbs"
 	"github.com/zhanghe06/gin_project/models"
 	"github.com/zhanghe06/gin_project/requests"
@@ -50,7 +50,13 @@ func GetDailySentenceHandler(c *gin.Context) {
 	var dailySentence models.DailySentence
 
 	if err := dbs.DbClient.Where("id = ?", id).First(&dailySentence).Error; err != nil {
-		c.AbortWithError(http.StatusNotFound, err)
+		if gorm.IsRecordNotFoundError(err) {
+			// 记录不存在
+			c.AbortWithError(http.StatusNotFound, err)
+		} else {
+			// 数据库异常
+			c.AbortWithError(http.StatusInternalServerError, err)
+		}
 		return
 	}
 	c.JSON(http.StatusOK, dailySentence)
@@ -68,9 +74,23 @@ func CreateDailySentenceHandler(c *gin.Context) {
 	}(c)
 
 	var dailySentence models.DailySentence
-	c.ShouldBindJSON(&dailySentence)
+
+	// 参数校验
+	if err := c.ShouldBindJSON(&dailySentence); err != nil {
+		c.AbortWithError(http.StatusBadRequest, err)
+		return
+	}
+
 	if err := dbs.DbClient.Create(&dailySentence).Error; err != nil {
-		c.AbortWithStatus(http.StatusBadRequest)
+		if driverErr, ok := err.(*mysql.MySQLError); ok { // Now the error number is accessible directly
+			if driverErr.Number == 1062 {
+				// 记录重复
+				c.AbortWithError(http.StatusBadRequest, err)
+			}
+		} else {
+			// 数据库异常
+			c.AbortWithError(http.StatusInternalServerError, err)
+		}
 		return
 	}
 	c.JSON(http.StatusOK, dailySentence)
@@ -92,20 +112,33 @@ func UpdateDailySentenceHandler(c *gin.Context) {
 	//id := c.Params.ByName("id")
 	id := c.Param("id")
 	if err := dbs.DbClient.Where("id = ?", id).First(&dailySentence).Error; err != nil {
-		c.AbortWithError(http.StatusNotFound, err)
+		if gorm.IsRecordNotFoundError(err) {
+			// 记录不存在
+			c.AbortWithError(http.StatusNotFound, err)
+		} else {
+			// 数据库异常
+			c.AbortWithError(http.StatusInternalServerError, err)
+		}
 		return
 	}
 
-	// 解析参数, 注意顺序, 放在获取数据之后
-	err := c.ShouldBindJSON(&dailySentence)
-	if err != nil {
+	// 参数校验, 注意顺序, 放在获取数据之后
+	if err := c.ShouldBindJSON(&dailySentence); err != nil {
 		c.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
 
 	// 保存所有字段
 	if err := dbs.DbClient.Save(&dailySentence).Error; err != nil {
-		c.AbortWithError(http.StatusBadRequest, err)
+		if driverErr, ok := err.(*mysql.MySQLError); ok { // Now the error number is accessible directly
+			if driverErr.Number == 1062 {
+				// 记录重复
+				c.AbortWithError(http.StatusBadRequest, err)
+			}
+		} else {
+			// 数据库异常
+			c.AbortWithError(http.StatusInternalServerError, err)
+		}
 		return
 	}
 	c.JSON(http.StatusOK, dailySentence)
@@ -123,8 +156,9 @@ func ReTitleDailySentenceHandler(c *gin.Context) {
 	}(c)
 
 	var jsonRequests requests.ReTitleJsonRequests
-	err := c.ShouldBindJSON(&jsonRequests)
-	if err != nil {
+
+	// 参数校验
+	if err := c.ShouldBindJSON(&jsonRequests); err != nil {
 		c.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
@@ -151,7 +185,13 @@ func ReTitleDailySentenceHandler(c *gin.Context) {
 	var dailySentence models.DailySentence
 	if err := tx.Where("id = ?", id).Set("gorm:query_option", "FOR UPDATE").First(&dailySentence).Error; err != nil {
 		tx.Rollback()
-		c.AbortWithError(http.StatusNotFound, err)
+		if gorm.IsRecordNotFoundError(err) {
+			// 记录不存在
+			c.AbortWithError(http.StatusNotFound, err)
+		} else {
+			// 数据库异常
+			c.AbortWithError(http.StatusInternalServerError, err)
+		}
 		return
 	}
 
@@ -162,7 +202,15 @@ func ReTitleDailySentenceHandler(c *gin.Context) {
 	// 更新指定字段
 	if err := tx.Model(&dailySentence).UpdateColumns(updateData).Error; err != nil {
 		tx.Rollback()
-		c.AbortWithError(http.StatusBadRequest, err)
+		if driverErr, ok := err.(*mysql.MySQLError); ok { // Now the error number is accessible directly
+			if driverErr.Number == 1062 {
+				// 记录重复
+				c.AbortWithError(http.StatusBadRequest, err)
+			}
+		} else {
+			// 数据库异常
+			c.AbortWithError(http.StatusInternalServerError, err)
+		}
 		return
 	}
 
@@ -187,8 +235,9 @@ func DeleteDailySentenceHandler(c *gin.Context) {
 	}(c)
 
 	var uriRequests requests.DeleteDailySentenceUriRequests
-	err := c.ShouldBindUri(&uriRequests)
-	if err != nil {
+
+	// 参数校验
+	if err := c.ShouldBindUri(&uriRequests); err != nil {
 		c.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
@@ -216,14 +265,17 @@ func ScoreDailySentenceHandler(c *gin.Context) {
 		}
 	}(c)
 
-	// 参数校验
 	var uriRequests requests.ScoreDailySentenceUriRequests
+
+	// 参数校验
 	if err := c.ShouldBindUri(&uriRequests); err != nil {
 		c.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
 
 	var jsonRequests requests.ScoreDailySentenceJsonRequests
+
+	// 参数校验
 	if err := c.ShouldBindJSON(&jsonRequests); err != nil {
 		c.AbortWithError(http.StatusBadRequest, err)
 		return
@@ -237,7 +289,13 @@ func ScoreDailySentenceHandler(c *gin.Context) {
 	var dailySentence models.DailySentence
 	//if err := dbs.DbClient.Where("id = ?", id).First(&dailySentence).Error; err != nil {
 	if err := dbs.DbClient.First(&dailySentence, id).Error; err != nil { // 此种写法仅仅支持整形主键
-		c.AbortWithError(http.StatusNotFound, err)
+		if gorm.IsRecordNotFoundError(err) {
+			// 记录不存在
+			c.AbortWithError(http.StatusNotFound, err)
+		} else {
+			// 数据库异常
+			c.AbortWithError(http.StatusInternalServerError, err)
+		}
 		return
 	}
 

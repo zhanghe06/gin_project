@@ -6,6 +6,7 @@ import (
 	"github.com/zhanghe06/gin_project/dbs"
 	"github.com/zhanghe06/gin_project/etcds"
 	"github.com/zhanghe06/gin_project/logs"
+	"github.com/zhanghe06/gin_project/rabbitmq"
 	"github.com/zhanghe06/gin_project/routers"
 	"github.com/zhanghe06/gin_project/validators"
 )
@@ -28,6 +29,13 @@ func main() {
 		log.Fatal(err)
 	}
 	defer dbs.Close()
+
+	// 初始化消息队列
+	err = rabbitmq.Init()
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer rabbitmq.Close()
 
 	// 初始化ETCD
 	err = etcds.Init()

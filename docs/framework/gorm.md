@@ -46,6 +46,18 @@ func main() {
 }
 ```
 
+导入数据库驱动-MySQL
+```go
+import _ "github.com/go-sql-driver/mysql"
+```
+可以用以下替代
+```go
+import _ "github.com/jinzhu/gorm/dialects/mysql"
+// import _ "github.com/jinzhu/gorm/dialects/postgres"
+// import _ "github.com/jinzhu/gorm/dialects/sqlite"
+// import _ "github.com/jinzhu/gorm/dialects/mssql"
+```
+
 
 ## GOrm 扩展
 
@@ -83,3 +95,8 @@ http://gorm.io/docs/update.html
 ## Transaction
 
 `for update`仅适用于`InnoDB`，且必须在事务块(`BEGIN`/`COMMIT`)中才能生效。
+
+
+## autocommit
+
+设置`&autocommit=false`貌似没有影响，源码没有查到此参数设置，待查

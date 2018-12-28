@@ -69,7 +69,7 @@ MariaDB [gin_project]> show status like '%conn%';
 
 查询数据库连接数配置信息
 ```
-MariaDB [flask_project]> show variables like '%conn%';
+MariaDB [gin_project]> show variables like '%conn%';
 +-----------------------------------------------+-----------------+
 | Variable_name                                 | Value           |
 +-----------------------------------------------+-----------------+
@@ -86,3 +86,40 @@ MariaDB [flask_project]> show variables like '%conn%';
 +-----------------------------------------------+-----------------+
 10 rows in set (0.00 sec)
 ```
+
+查询`autocommit`是否打开
+```
+MariaDB [gin_project]> select @@autocommit;
++--------------+
+| @@autocommit |
++--------------+
+|            1 |
++--------------+
+1 row in set (0.00 sec)
+MariaDB [gin_project]> SHOW GLOBAL VARIABLES LIKE 'autocommit';
++---------------+-------+
+| Variable_name | Value |
++---------------+-------+
+| autocommit    | ON    |
++---------------+-------+
+1 row in set (0.01 sec)
+MariaDB [gin_project]> SHOW VARIABLES LIKE 'autocommit';
++---------------+-------+
+| Variable_name | Value |
++---------------+-------+
+| autocommit    | ON    |
++---------------+-------+
+1 row in set (0.00 sec)
+```
+
+修改`autocommit`
+```
+MariaDB [gin_project]> set autocommit = 0;（默认是1）
+Query OK, 0 rows affected (0.00 sec)
+MariaDB [gin_project]> set global autocommit = 0;（默认是1）
+Query OK, 0 rows affected (0.00 sec)
+```
+
+1、建立新连接, 如果不修改连接参数, 默认会以`global`变量数值为准, 局部变量仅在当前连接有效
+
+2、当前连接修改全局变量, 不会同步修改局部变量
