@@ -1,4 +1,5 @@
 debug: true
+mode: "local"
 project:
   name: "gin_project"
 ver: "v1"
@@ -25,4 +26,4 @@ rabbitmq:
   ip: "127.0.0.1"
   port: "5672"
 log:
-  file_path: "/var/log/gin_project/app.log"
+  file_path: "/tmp/app.log"

@@ -14,9 +14,16 @@ var VerToken *gin.RouterGroup
 func Init() *gin.Engine {
 	// 创建路由
 	Router = gin.New()
+
+	// 测试模式禁用日志中间件
+	if viper.GetString("mode") != "test" {
+		Router.Use(
+			middlewares.LoggingMiddleware(),
+		)
+	}
+
 	Router.Use(
 		//gin.Logger(),
-		middlewares.LoggingMiddleware(),
 		middlewares.RecoveryMiddleware(),
 		middlewares.RequestIdMiddleware(),
 	)

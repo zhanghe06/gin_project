@@ -1,4 +1,5 @@
 debug: true
+mode: "test"
 project:
   name: "gin_project"
 ver: "v1"
