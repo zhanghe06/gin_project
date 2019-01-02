@@ -38,7 +38,7 @@ func DailySentenceGetTest(t *testing.T) {
 	//assert.Equal(t, "", response.Body.String())
 }
 
-func DailySentenceCreateTest(t *testing.T) {
+func DailySentenceCreateSuccessTest(t *testing.T) {
 	// 初始化路由
 	router := routers.Init()
 
@@ -56,6 +56,21 @@ func DailySentenceCreateTest(t *testing.T) {
 	router.ServeHTTP(response, request)
 
 	assert.Equal(t, http.StatusOK, response.Code)
+	//assert.Equal(t, "", response.Body.String())
+}
+
+func DailySentenceCreateFailureTest(t *testing.T) {
+	// 初始化路由
+	router := routers.Init()
+
+	response := httptest.NewRecorder()
+	url := fmt.Sprintf("/%s/daily_sentence", viper.GetString("ver"))
+	bodyMap := map[string]string{
+		"author": "Test",
+		"title": "我是一句话",
+		"classification": "news",
+	}
+	bodyByte, _ := json.Marshal(bodyMap)
 
 	// 重复记录
 	requestRepeat, _ := http.NewRequest("POST", url, bytes.NewReader(bodyByte))
@@ -70,7 +85,7 @@ func DailySentenceDeleteTest(t *testing.T) {
 	router := routers.Init()
 
 	response := httptest.NewRecorder()
-	url := fmt.Sprintf("/%s/daily_sentence/2", viper.GetString("ver"))
+	url := fmt.Sprintf("/%s/daily_sentence/1", viper.GetString("ver"))
 	request, _ := http.NewRequest("DELETE", url, nil)
 	router.ServeHTTP(response, request)
 
@@ -85,7 +100,8 @@ func TestDailySentence(t *testing.T) {
 	t.Run("group", func(t *testing.T) {
 		t.Run("DailySentenceListTest", DailySentenceListTest)
 		t.Run("DailySentenceGetTest", DailySentenceGetTest)
-		t.Run("DailySentenceCreateTest", DailySentenceCreateTest)
+		t.Run("DailySentenceCreateSuccessTest", DailySentenceCreateSuccessTest)
+		t.Run("DailySentenceCreateFailureTest", DailySentenceCreateFailureTest)
 		t.Run("DailySentenceDeleteTest", DailySentenceDeleteTest)
 	})
 	// 退出设置

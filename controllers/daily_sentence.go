@@ -81,6 +81,11 @@ func CreateDailySentenceHandler(c *gin.Context) {
 		return
 	}
 
+	// 记录时间
+	currentTime := time.Now()
+	dailySentence.CreateTime = currentTime
+	dailySentence.UpdateTime = currentTime
+
 	if err := dbs.DbClient.Create(&dailySentence).Error; err != nil {
 		if driverErr, ok := err.(*mysql.MySQLError); ok { // Now the error number is accessible directly
 			if driverErr.Number == 1062 {
