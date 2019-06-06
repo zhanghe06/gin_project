@@ -17,3 +17,11 @@ type DeleteDailySentenceUriRequests struct {
 type ScoreDailySentenceUriRequests struct {
 	ID string `uri:"id" binding:"required"`
 }
+
+type UpdateDailySentenceTransactionRequests struct {
+	ID string `json:"id" binding:"required"`
+	Author string `json:"author"`
+	Title string `json:"title"`
+	Classification string `json:"classification"`
+	Score int `json:"score"`
+}

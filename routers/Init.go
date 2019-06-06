@@ -42,6 +42,7 @@ func Init() *gin.Engine {
 	RegisterIndex()
 	RegisterAbout()
 	RegisterDailySentence()
+	RegisterStream()
 	RegisterToken()
 	RegisterInfo()
 	RegisterDownload()

@@ -100,3 +100,24 @@ http://gorm.io/docs/update.html
 ## autocommit
 
 设置`&autocommit=false`貌似没有影响，源码没有查到此参数设置，待查
+
+
+## Sql 注入
+
+错误方式
+```
+db = db.Where("name LIKE '%"+args.Name+"%'")
+```
+
+正确方式
+```
+name := fmt.Sprintf("%%%s%%", args.Name)
+db = db.Where("name LIKE ?", name)
+```
+
+拼接sql，应该使用占位符`?`，避免直接解析
+
+POC
+```
+%') and sleep(1);-- -
+```

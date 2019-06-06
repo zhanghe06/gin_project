@@ -10,15 +10,20 @@ func Struct2Map(obj interface{}) map[string]interface{} {
 
 	var data = make(map[string]interface{})
 	for i := 0; i < t.NumField(); i++ {
+		// 获取json key
 		dataKey := t.Field(i).Tag.Get("json")
 		if dataKey == "" {
 			dataKey = SnakeString(t.Field(i).Name)
 		}
+
 		dataValue := v.Field(i).Interface()
-		// TODO fix value type
-		if dataValue == "" {
-			dataValue = t.Field(i).Tag.Get("default")
+
+		// 获取默认值
+		defaultValue := t.Field(i).Tag.Get("default")
+		if defaultValue == "" {
+			dataValue = v.Field(i).Interface().(string)
 		}
+
 		data[dataKey] = dataValue
 	}
 	return data

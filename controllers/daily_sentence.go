@@ -2,15 +2,18 @@ package controllers
 
 import (
 	"fmt"
+	"net/http"
+	"time"
+
 	"github.com/gin-gonic/gin"
 	"github.com/go-sql-driver/mysql"
 	"github.com/jinzhu/gorm"
+
+	"github.com/zhanghe06/gin_project/apis"
 	"github.com/zhanghe06/gin_project/dbs"
 	"github.com/zhanghe06/gin_project/models"
 	"github.com/zhanghe06/gin_project/requests"
 	"github.com/zhanghe06/gin_project/utils"
-	"net/http"
-	"time"
 )
 
 // 获取列表
@@ -312,4 +315,45 @@ func ScoreDailySentenceHandler(c *gin.Context) {
 	}
 	// 注意: 这里的res.Value和dailySentence一样, 更新的字段仅为updates传入的参数, 其余数据库自动修改的字段不会更新到这里
 	c.JSON(http.StatusOK, dailySentence)
+}
+
+
+
+// 更新记录
+//curl -X POST \
+// http://0.0.0.0:8080/v1/daily_sentence/transaction \
+// -H 'Content-Type: application/json' \
+// -d '{
+//   "id": "1",
+//   "Title": "this is a test",
+//   "Classification": "news"
+//}'
+func UpdateDailySentenceTransactionHandler(c *gin.Context) {
+	// 意外异常
+	defer func(c *gin.Context) {
+		if rec := recover(); rec != nil {
+			err := fmt.Errorf("%v", rec)
+			c.AbortWithError(http.StatusInternalServerError, err)
+		}
+	}(c)
+
+	var dailySentenceRequest requests.UpdateDailySentenceTransactionRequests
+
+	// 参数校验
+	if err := c.ShouldBindJSON(&dailySentenceRequest); err != nil {
+		c.AbortWithError(http.StatusBadRequest, err)
+		return
+	}
+
+	condition := map[string]interface{}{"id": dailySentenceRequest.ID}
+	updateData := map[string]interface{}{}
+	if dailySentenceRequest.Title != "" {
+		updateData["title"] = dailySentenceRequest.Title
+	}
+	rows, err := apis.UpdateDailySentenceTransaction(condition, updateData)
+	if err != nil {
+		c.AbortWithError(http.StatusBadRequest, err)
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"rows": rows})
 }

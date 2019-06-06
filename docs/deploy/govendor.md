@@ -29,9 +29,10 @@ govendor sync
 govendor add +e
 ```
 
-更新项目依赖
+更新项目依赖（新增依赖 + 更新已有依赖）
 ```
-govendor update github.com/gin-gonic/gin
+govendor add +e
+govendor update +v
 ```
 
 中国特色依赖

@@ -132,6 +132,12 @@
 			"revisionTime": "2018-11-12T22:07:05Z"
 		},
 		{
+			"checksumSHA1": "p3IB18uJRs4dL2K5yx24MrLYE9A=",
+			"path": "github.com/google/go-querystring/query",
+			"revision": "c8c88dbee036db4e4808d1f2ec8c2e15e11c3f80",
+			"revisionTime": "2019-03-18T16:54:38Z"
+		},
+		{
 			"checksumSHA1": "C+zzeVyMEN61Nq58sk4/VzhhyI4=",
 			"origin": "go.etcd.io/etcd/vendor/github.com/google/uuid",
 			"path": "github.com/google/uuid",
@@ -248,6 +254,12 @@
 			"revisionTime": "2018-08-21T11:37:35Z"
 		},
 		{
+			"checksumSHA1": "CHo41LTnECfBTDtjYb7V2BQqcIc=",
+			"path": "github.com/levigross/grequests",
+			"revision": "37c80f76a0dae6ed656cbc830643ba53f45fc79c",
+			"revisionTime": "2019-01-30T13:28:59Z"
+		},
+		{
 			"checksumSHA1": "AYZGozgchqe4WcKH/jCZI1flnP8=",
 			"path": "github.com/magiconair/properties",
 			"revision": "c2353362d570a7bfa228149c62842019201cfb71",
@@ -338,7 +350,7 @@
 			"revisionTime": "2018-12-05T11:43:30Z"
 		},
 		{
-			"checksumSHA1": "MAzQxLlGpnkO2tPOcQtZX9ciLRM=",
+			"checksumSHA1": "j/aP/n+qaMNBUou/a2m2LDJ5q3Q=",
 			"path": "github.com/ugorji/go/codec",
 			"revision": "772ced7fd4c2f6322c07537a9a93b68d74551fa6",
 			"revisionTime": "2018-12-09T15:14:46Z"
@@ -544,6 +556,12 @@
 			"revisionTime": "2018-11-12T22:07:05Z"
 		},
 		{
+			"checksumSHA1": "jK6R6IOkFox8NlXvE1hkXM7bgH4=",
+			"path": "golang.org/x/net/publicsuffix",
+			"revision": "f4e77d36d62c17c2336347bb2670ddbd02d092b7",
+			"revisionTime": "2019-05-02T22:26:14Z"
+		},
+		{
 			"checksumSHA1": "6ckrK99wkirarIfFNX4+AHWBEHM=",
 			"origin": "go.etcd.io/etcd/vendor/golang.org/x/net/trace",
 			"path": "golang.org/x/net/trace",
@@ -551,7 +569,7 @@
 			"revisionTime": "2018-11-12T22:07:05Z"
 		},
 		{
-			"checksumSHA1": "rpVGMdgqNVY3sYQZg2RPtiwPzsY=",
+			"checksumSHA1": "GKC8IFNbSdF5HKJVx+Cm/3ASlH8=",
 			"path": "golang.org/x/sys/unix",
 			"revision": "d0be0721c37eeb5299f245a996a483160fc36940",
 			"revisionTime": "2018-09-09T03:34:56Z"
@@ -583,7 +601,7 @@
 			"revisionTime": "2018-11-12T22:07:05Z"
 		},
 		{
-			"checksumSHA1": "othnvXmmdxkNRyNDxRg5SKwLP8k=",
+			"checksumSHA1": "XJr6+rzzxASewSbC/SCStyGlmuw=",
 			"path": "golang.org/x/text/unicode/norm",
 			"revision": "4d1c5fb19474adfe9562c9847ba425e7da817e81",
 			"revisionTime": "2018-09-21T09:56:34Z"

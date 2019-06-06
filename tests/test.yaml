@@ -1,0 +1,12 @@
+test:
+  user:
+    - tom
+    - lily
+  db:
+    host: 127.0.0.1
+    username: abc
+    password: 123
+  web:
+    port: 80
+    host: local
+title: hello

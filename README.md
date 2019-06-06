@@ -26,3 +26,39 @@ gitbook serve
 ```
 
 [http://localhost:4000/](http://localhost:4000/)
+
+
+## 语言哲学
+
+换一种语言，意味着换一种信仰
+
+语言不同，哲学不同，思维不同，最佳实践自然不同
+
+[我为什么放弃Go语言](https://www.cnblogs.com/findumars/p/4097888.html)
+
+[驳狗屎文 "我为什么放弃Go语言"](https://blog.csdn.net/cxlzxi/article/details/50284975)
+
+
+## 常用语法特性
+
+map 通过双赋值检测某个键存在
+```
+elem, ok = m[key]
+```
+
+指针操作符
+```
+& 变量取地址
+* 指针取值
+```
+
+struct 定义json时，omitempty忽略零值和空值
+```
+Field int `json:"myName"`               // 以原始"myName"作为键名
+Field int `json:"myName,omitempty"`     // 以原始"myName"作为键名，如果为空则忽略字段序列化
+Field int `json:",omitempty"`           // 以原始"Field"作为键名，
+Field int `json:"-"`                    // 忽略字段序列化
+Field int `json:"-,"`                   // 以"-"作为键名
+```
+
+只有发送者才能关闭 channel，而不是接收者。向一个已经关闭的 channel 发送数据会引起 panic

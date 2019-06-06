@@ -73,6 +73,19 @@ func main()  {
 }
 ```
 
+### interface
+
+interface{}变量的本质。
+在Go语言中，一个interface{}类型的变量包含了2个指针，一个指针指向值的类型，另外一个指针指向实际的值。
+
+对于一个interface{}类型的nil变量来说，它的两个指针都是0。这是符合Go语言对nil的标准定义的。
+
+避免将一个有可能为nil的具体类型的值赋值给interface变量
+
+
+### struct
+
+
 ### 互斥锁（sync.Mutex）和读写互斥锁（sync.RWMutex）
 
 ```go
@@ -184,3 +197,23 @@ func main() {
 3、close主要用来关闭channel通道其用法为close(channel)，并且实在生产者的地方关闭channel，而不是在消费者的地方关闭．并且关闭channel后，便不可再想channel中继续存入数据，但是可以继续从channel中读取数据
 
 4、channel阻塞超时处理，通过select设置超时处理
+
+
+### context
+
+```
+go get golang.org/x/net/context
+```
+
+
+### signal
+
+有两种信号不能被拦截和处理: `SIGKILL`和`SIGSTOP`
+
+当接收到信号时，进程会根据信号的响应动作执行相应的操作，信号的响应动作有以下几种：
+
+- 中止进程(Term)
+- 忽略信号(Ign)
+- 中止进程并保存内存信息(Core)
+- 停止进程(Stop)
+- 继续运行进程(Cont)

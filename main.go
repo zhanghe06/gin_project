@@ -4,7 +4,6 @@ import (
 	log "github.com/sirupsen/logrus"
 	"github.com/zhanghe06/gin_project/config"
 	"github.com/zhanghe06/gin_project/dbs"
-	"github.com/zhanghe06/gin_project/etcds"
 	"github.com/zhanghe06/gin_project/logs"
 	"github.com/zhanghe06/gin_project/rabbitmq"
 	"github.com/zhanghe06/gin_project/routers"
@@ -38,11 +37,11 @@ func main() {
 	defer rabbitmq.Close()
 
 	// 初始化ETCD
-	err = etcds.Init()
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer etcds.Close()
+	//err = etcds.Init()
+	//if err != nil {
+	//	log.Fatal(err)
+	//}
+	//defer etcds.Close()
 
 	// 初始化路由
 	router := routers.Init()
@@ -52,6 +51,15 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	// 消息队列
+	//rabbitmq.Channel()
+	//rabbitmq.ExchangeDeclare()
+	//rabbitmq.QueueDeclare()
+	//rabbitmq.QueueBind()
+	//rabbitmq.Publish("test msg")
+	//rabbitmq.Consume()
+	//go rabbitmq.Keepalive()
 
 	// 启动服务
 	router.Run()
