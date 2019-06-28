@@ -12,11 +12,14 @@ import (
 
 func main() {
 	// 初始化配置
-	config.Init()
+	err := config.Init()
+	if err != nil {
+		log.Fatal(err)
+	}
 	config.Watch()
 
 	// 初始化日志
-	err := logs.Init()
+	err = logs.Init()
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -62,5 +65,8 @@ func main() {
 	//go rabbitmq.Keepalive()
 
 	// 启动服务
-	router.Run()
+	err = router.Run()
+	if err != nil {
+		log.Fatal(err)
+	}
 }

@@ -10,6 +10,7 @@ import (
 
 // 流式请求（利用 H5 的新特性 SSE）
 // curl -i -X GET http://0.0.0.0:8080/v1/stream/sse
+// https://www.html5rocks.com/en/tutorials/eventsource/basics/
 func StreamSSEHandler(c *gin.Context) {
 	chanStream := make(chan int, 10)
 	go func() {

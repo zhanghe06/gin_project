@@ -21,9 +21,6 @@ var MQQueue amqp.Queue
 var Done chan bool
 var NotifyClose chan *amqp.Error
 
-
-
-
 //func failOnError(err error, msg string) {
 //	if err != nil {
 //		log.Fatalf("%s: %s", msg, err)
@@ -46,12 +43,15 @@ func Init() (err error) {
 }
 
 func Close() {
-	MQChannel.Close()
-	MQConn.Close()
+	_ = MQChannel.Close()
+	_ = MQConn.Close()
 }
 
 func Channel() (err error) {
 	MQChannel, err = MQConn.Channel()
+	if err != nil {
+		return
+	}
 	NotifyClose = make(chan *amqp.Error)
 	MQChannel.NotifyClose(NotifyClose)
 	return

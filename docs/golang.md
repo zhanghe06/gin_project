@@ -3,6 +3,27 @@
 https://golang.org
 
 
+### install （Mac OS）
+
+https://golang.org/dl/
+
+```
+wget https://dl.google.com/go/go1.12.6.darwin-amd64.pkg
+```
+
+安装
+
+https://golang.org/doc/install
+
+设置环境变量 .zshrc
+```
+# golang
+export GOROOT=/usr/local/go
+export GOPATH=$HOME/work
+export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
+```
+
+
 ### strings
 
 ```go
@@ -84,6 +105,38 @@ interface{}变量的本质。
 
 
 ### struct
+
+
+### json
+
+Encode  
+将一个对象编码成JSON数据，接受一个interface{}对象，返回[]byte和error：  
+func Marshal(v interface{}) ([]byte, error)  
+
+Marshal函数将会递归遍历整个对象，依次按成员类型对这个对象进行编码，类型转换规则如下：  
+```
+bool类型 转换为JSON的Boolean
+整数，浮点数等数值类型 转换为JSON的Number
+string 转换为JSON的字符串(带""引号)
+struct 转换为JSON的Object，再根据各个成员的类型递归打包
+数组或切片 转换为JSON的Array
+[]byte 会先进行base64编码然后转换为JSON字符串
+map 转换为JSON的Object，key必须是string
+interface{} 按照内部的实际类型进行转换
+nil 转为JSON的null
+channel,func等类型 会返回UnsupportedTypeError
+```
+
+interface{}类型在Unmarshal时，会自动将JSON转换为对应的数据类型：
+```
+JSON的boolean 转换为bool
+JSON的数值 转换为float64
+JSON的字符串 转换为string
+JSON的Array 转换为[]interface{}
+JSON的Object 转换为map[string]interface{}
+JSON的null 转换为nil
+```
+
 
 
 ### 互斥锁（sync.Mutex）和读写互斥锁（sync.RWMutex）

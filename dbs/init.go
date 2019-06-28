@@ -63,10 +63,9 @@ func Init() (err error) {
 	return
 }
 
-func Close() (err error) {
+func Close() {
 	if DbClient != nil {
-		err = DbClient.Close()
-		return err
+		_ = DbClient.Close()
 	}
 	return
 }
