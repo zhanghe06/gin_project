@@ -13,16 +13,12 @@ func Init() (err error) {
 		Endpoints:   viper.GetStringSlice("etcd.endpoints"),
 		DialTimeout: time.Duration(viper.GetInt("etcd.timeout")) * time.Second,
 	})
-	if err != nil {
-		return err
-	}
 	return
 }
 
 func Close() (err error) {
 	if EtcdClient != nil {
 		err = EtcdClient.Close()
-		return err
 	}
 	return
 }

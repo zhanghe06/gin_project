@@ -55,14 +55,22 @@ func main() {
 		log.Fatal(err)
 	}
 
-	// 消息队列
-	//rabbitmq.Channel()
-	//rabbitmq.ExchangeDeclare()
-	//rabbitmq.QueueDeclare()
-	//rabbitmq.QueueBind()
-	//rabbitmq.Publish("test msg")
-	//rabbitmq.Consume()
-	//go rabbitmq.Keepalive()
+	// 消息处理
+	messages := make(chan []byte)
+
+	err = rabbitmq.Consumer.Consume(messages)
+	if err != nil {
+		log.Fatal(err)
+	}
+	// 仅仅打印消息
+	go func() {
+		for message := range messages {
+			log.Printf(" [x] %s", message)
+			panic("123456")
+			//err = errors.New("123456")
+			//return
+		}
+	}()
 
 	// 启动服务
 	err = router.Run()

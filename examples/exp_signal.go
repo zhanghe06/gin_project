@@ -34,7 +34,7 @@ func main() {
 	fmt.Println("exiting")
 }
 
-// Result
+// ApiResult
 
 /*
 awaiting signal

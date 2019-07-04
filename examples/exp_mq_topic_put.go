@@ -33,6 +33,10 @@ func main() {
 	rk := "guangzhou.huangpu"
 	//rk := "guangzhou.liwan"
 
+	// 测试gin项目
+	ex = "ex.project.topic"
+	rk = "rk.project"
+
 	err = ch.ExchangeDeclare(
 		ex,      // name
 		"topic", // type

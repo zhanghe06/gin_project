@@ -247,9 +247,21 @@ func main() {
 
 需要注意 go协程与主协程的顺序，防止死锁
 
-3、close主要用来关闭channel通道其用法为close(channel)，并且实在生产者的地方关闭channel，而不是在消费者的地方关闭．并且关闭channel后，便不可再想channel中继续存入数据，但是可以继续从channel中读取数据
+3、close主要用来关闭channel通道其用法为close(channel)，并且是在生产者的地方关闭channel，而不是在消费者的地方关闭．并且关闭channel后，便不可再想channel中继续存入数据，但是可以继续从channel中读取数据
 
 4、channel阻塞超时处理，通过select设置超时处理
+
+读写特性
+```
+//定义只读的channel
+read_only := make (<-chan int)
+
+//定义只写的channel
+write_only := make (chan<- int)
+
+//可同时读写
+read_write := make (chan int)
+```
 
 
 ### context
