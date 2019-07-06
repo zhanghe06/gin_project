@@ -282,3 +282,10 @@ go get golang.org/x/net/context
 - 中止进程并保存内存信息(Core)
 - 停止进程(Stop)
 - 继续运行进程(Cont)
+
+
+### 新建
+
+- new() 返回指针
+- struct{} 返回struct
+- make() 仅适用于 map，slice 和 channel

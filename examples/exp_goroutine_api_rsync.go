@@ -18,7 +18,7 @@ const (
 	StatusFailure = "failure" // 失败
 )
 
-type RsyncApiData string
+type RsyncApiData string // 可根据实际接口重新配置
 type RsyncApiError error
 
 type DecoratorRsyncApiResult struct {
@@ -61,7 +61,7 @@ func rsyncApiResponseDecorator(apiFunc func() (RsyncApiData, RsyncApiError), exp
 	d := time.Duration(timeout) * time.Second
 	timeAfter := time.After(d)
 
-	done := make(chan bool) // 接口接口请求完成
+	done := make(chan bool) // 请求完成
 	for {
 		fmt.Println("[response] start")
 		go func(decoratorResultChan chan DecoratorRsyncApiResult) {

@@ -109,15 +109,6 @@ func (mq *ClientRabbitMQ) Consume(message chan []byte) (err error) {
 		done <- true
 	}(deliveries, mq.done, message)
 	return
-
-	// 仅仅打印消息
-	//go func() {
-	//	for d := range deliveries {
-	//		log.Printf(" [x] %s", d.Body)
-	//		err = errors.New("123456")
-	//		return
-	//	}
-	//}()
 }
 
 func (mq *ClientRabbitMQ) Publish(ex string, rk string, body string) (err error) {
