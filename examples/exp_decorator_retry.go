@@ -38,10 +38,6 @@ func retryApiDecorator(apiFunc func() (string, error), decoratorResultChan chan 
 	retry := make(chan bool) // 接口请求重试
 
 	for i := 0; i < countRetry+1; i++ {
-
-		fmt.Println(i)
-		fmt.Println(countRetry)
-
 		// 显示重试次数
 		if i > 0 {
 			fmt.Println()
