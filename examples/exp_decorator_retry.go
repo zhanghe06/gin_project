@@ -18,15 +18,12 @@ func doErrorApiRequest() (string, error) {
 	numRand := seededRand.Intn(2)
 	// 随机返回异常
 	switch numRand {
-	case 0:
-		// 错误
+	case 0:		// 错误
 		return "", errors.New("api error")
-	case 1:
-		// 超时
+	case 1:		// 超时
 		time.Sleep(10 * time.Second)
 		return "", errors.New("api timeout")
-	default:
-		// 正常
+	default:	// 正常
 		return "1", nil
 	}
 }
@@ -34,7 +31,7 @@ func doErrorApiRequest() (string, error) {
 // 接口重试装饰器
 func retryApiDecorator(apiFunc func() (string, error), decoratorResultChan chan DecoratorRetryApiResult, countRetry, timeout int) {
 
-	done := make(chan bool)  // 接口请求完成
+	done := make(chan bool) // 接口请求完成
 
 	for i := 0; i < countRetry+1; i++ {
 		// 显示重试次数
@@ -49,50 +46,37 @@ func retryApiDecorator(apiFunc func() (string, error), decoratorResultChan chan 
 
 		// 单次接口结果
 		apiResChan := make(chan DecoratorRetryApiResult, 1)
-		// 接口请求重试
-		retry := make(chan bool)
+		// 单次接口错误
+		apiErrorChan := make(chan bool)
 
 		log.Info("[request ] start")
 		go func(apiResChan chan DecoratorRetryApiResult) {
 			res, err := apiFunc()
 			apiResChan <- DecoratorRetryApiResult{res, err}
 
-			// 错误处理
 			if err == nil {
 				done <- true
 				return
 			} else {
-				retry <- true
+				apiErrorChan <- true
 			}
 		}(apiResChan)
 		log.Info("[request ] end")
 
 		select {
-		// 正常结束
-		case <-done:
+		case <-done:			// 正常请求结束
 			decoratorResultChan <- <-apiResChan
 			log.Info("[response] done!")
 			return
-		// 错误重试
-		case <-retry:
+		case <-apiErrorChan:	// 单次请求错误
 			log.Info("[response] error")
-
-			// 比较已经重试次数 是否超过 重试最大次数
-			if i >= countRetry {
-				log.Info("[request ] max retries...")
-				decoratorResultChan <- DecoratorRetryApiResult{"", errors.New("response max retries")}
-				return
-			}
-		// 超时重试
-		case <-timeAfter: // 单次超时重试
+		case <-timeAfter:		// 单次请求超时
 			log.Info("[response] timeout")
-
-			// 比较已经重试次数 是否超过 重试最大次数
-			if i >= countRetry {
-				log.Info("[response] max retries...")
-				decoratorResultChan <- DecoratorRetryApiResult{"", errors.New("response max retries")}
-				return
-			}
+		}
+		// 比较已经重试次数 是否超过 重试最大次数
+		if i >= countRetry {
+			decoratorResultChan <- DecoratorRetryApiResult{"", errors.New("response max retries")}
+			return
 		}
 	}
 }
@@ -106,9 +90,6 @@ func main() {
 
 	go retryApiDecorator(doErrorApiRequest, resultChan, countRetry, timeoutResponse)
 
-	select {
-	case decoratorResult := <-resultChan:
-		log.Info("[response]", "data:", decoratorResult.ApiData, "; error:", decoratorResult.ApiError)
-		return
-	}
+	decoratorResult := <-resultChan
+	log.Info("[response]", "data:", decoratorResult.ApiData, "; error:", decoratorResult.ApiError)
 }
