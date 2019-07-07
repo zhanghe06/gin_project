@@ -18,19 +18,21 @@ func doErrorApiRequest() (string, error) {
 	numRand := seededRand.Intn(2)
 	// 随机返回异常
 	switch numRand {
-	case 0:		// 错误
+	// 错误
+	case 0:
 		return "", errors.New("api error")
-	case 1:		// 超时
+	// 超时
+	case 1:
 		time.Sleep(10 * time.Second)
 		return "", errors.New("api timeout")
-	default:	// 正常
+	// 正常
+	default:
 		return "1", nil
 	}
 }
 
 // 接口重试装饰器
 func retryApiDecorator(apiFunc func() (string, error), decoratorResultChan chan DecoratorRetryApiResult, countRetry, timeout int) {
-
 	done := make(chan bool) // 接口请求完成
 
 	for i := 0; i < countRetry+1; i++ {
@@ -64,16 +66,19 @@ func retryApiDecorator(apiFunc func() (string, error), decoratorResultChan chan 
 		log.Info("[request ] end")
 
 		select {
-		case <-done:			// 正常请求结束
+		// 正常请求结束
+		case <-done:
 			decoratorResultChan <- <-apiResChan
 			log.Info("[response] done!")
 			return
-		case <-apiErrorChan:	// 单次请求错误
+		// 单次请求错误
+		case <-apiErrorChan:
 			log.Info("[response] error")
-		case <-timeAfter:		// 单次请求超时
+		// 单次请求超时
+		case <-timeAfter:
 			log.Info("[response] timeout")
 		}
-		// 比较已经重试次数 是否超过 重试最大次数
+		// 比较已经重试次数（是否达到重试最大次数）
 		if i >= countRetry {
 			decoratorResultChan <- DecoratorRetryApiResult{"", errors.New("response max retries")}
 			return
