@@ -264,6 +264,15 @@ read_write := make (chan int)
 ```
 
 
+### select case
+
+如果有同时多个case去处理,比如同时有多个channel可以接收数据，那么Go会伪随机的选择一个case处理(pseudo-random)。  
+如果没有case需要处理，则会选择default去处理，如果default case存在的情况下。  
+如果没有default case，则select语句会阻塞，直到某个case需要处理
+
+select语句和switch语句一样，它不是循环，它只会选择一个case来处理，如果想一直处理channel，你可以在外面加一个无限的for循环
+
+
 ### context
 
 ```

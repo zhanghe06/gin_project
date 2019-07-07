@@ -62,3 +62,8 @@ Field int `json:"-,"`                   // 以"-"作为键名
 ```
 
 只有发送者才能关闭 channel，而不是接收者。向一个已经关闭的 channel 发送数据会引起 panic
+
+
+## 调试
+
+永远不要用`fmt.Print`, 应该使用`log.Info`（带时间和代码行数）
