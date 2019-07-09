@@ -233,6 +233,18 @@ func main() {
 
 ### channel
 
+使用场景（把channel用在数据流动的地方）
+- 消息传递、消息过滤
+- 信号广播
+- 事件订阅与广播
+- 请求、响应转发
+- 任务分发
+- 结果汇总
+- 并发控制
+- 同步与异步
+- ...
+
+
 1、相对sync.WaitGroup而言，golang中利用channel实习同步则简单的多．channel自身可以实现阻塞，其通过<-进行数据传递，channel是golang中一种内置基本类型，对于channel操作只有４种方式：
 
 - 创建channel(通过make()函数实现，包括无缓存channel和有缓存channel);
@@ -247,7 +259,36 @@ func main() {
 
 需要注意 go协程与主协程的顺序，防止死锁
 
-3、close主要用来关闭channel通道其用法为close(channel)，并且是在生产者的地方关闭channel，而不是在消费者的地方关闭．并且关闭channel后，便不可再想channel中继续存入数据，但是可以继续从channel中读取数据
+3、close主要用来关闭channel通道其用法为close(channel)，并且是在生产者的地方关闭channel，而不是在消费者的地方关闭．并且关闭channel后，便不可再向channel中继续存入数据，但是可以继续从channel中读取数据
+
+需要显示关闭channel的场景：生产者、消费者对channel数量无法提前定义，只能在生产完成时，由生产者关闭channel，消费者select接收关闭信号
+```go
+// stopCh并不需要传递任何数据
+// 只是要给所有协程发送退出的信号
+type Handler struct {
+    stopCh chan struct{}
+    reqCh chan *Request
+}
+
+func (h *Handler) Stop() {
+    close(h.stopCh)
+
+    // 可以使用WaitGroup等待所有协程退出
+}
+
+// 收到停止后，不再处理请求
+func (h *Handler) loop() error {
+    for {
+        select {
+        case req := <-h.reqCh:
+            go handle(req)
+        case <-h.stopCh:
+            return
+        }
+    }
+}
+```
+示例中，h.stopCh为空，case <-h.stopCh一直阻塞；一旦关闭h.stopCh，则case <-h.stopCh接收到nil
 
 4、channel阻塞超时处理，通过select设置超时处理
 
@@ -262,6 +303,22 @@ write_only := make (chan<- int)
 //可同时读写
 read_write := make (chan int)
 ```
+
+channel可进行3种操作：读、写和关闭；把这3种操作和3种channel状态可以组合出9种情况:
+
+操作 | nil的channel | 正常channel | 已关闭channel
+--- | --- | --- | ---
+<- ch | 阻塞 | 成功或阻塞 | 读到零值
+ch <- | 阻塞 | 成功或阻塞 | panic
+close(ch) | panic | 成功 | panic
+
+有缓冲通道可供多个协程同时处理，在一定程度可提高并发性。
+
+若子协程读 channel，则主协程阻塞写
+
+若子协程写 channel，则主协程阻塞读
+
+语法上阻塞操作只能写在后面，不然子协程异步操作没法执行，也就是说不满足 chennel 通信条件
 
 
 ### select case
@@ -291,6 +348,15 @@ go get golang.org/x/net/context
 - 中止进程并保存内存信息(Core)
 - 停止进程(Stop)
 - 继续运行进程(Cont)
+
+
+### fatal error & panic
+
+- fatal error
+    - 立即退出应用程序，defer函数不执行
+- panic
+    - 函数本身停止执行，defer函数被执行，注意不是应用程序停止
+    - 需要recover()来辅助处理：丢弃或者上抛
 
 
 ### 新建

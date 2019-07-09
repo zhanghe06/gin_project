@@ -64,6 +64,16 @@ func testYamlToJson(yamlStr string) {
 	fmt.Println(string(jsonBytes))
 }
 
+// json 转 yaml
+func testJsonToYaml(jsonStr string) {
+	yamlBytes, err := yaml.JSONToYAML([]byte(jsonStr))
+	if err != nil {
+		fmt.Printf("err: %v\n", err)
+		log.Fatalln(err)
+	}
+	fmt.Println(string(yamlBytes))
+}
+
 // yaml 转 jsonIndent
 func testYamlToJsonIndent(yamlStr string) {
 	yamlMap := make(map[string]interface{})

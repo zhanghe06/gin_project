@@ -31,7 +31,10 @@ func doErrorApiRequest() (string, error) {
 	}
 }
 
-// 接口重试装饰器
+/*
+ * 接口重试装饰器
+ * 适用于幂等接口
+ */
 func retryApiDecorator(apiFunc func() (string, error), decoratorResultChan chan DecoratorRetryApiResult, countRetry, timeout int) {
 	done := make(chan bool) // 接口请求完成
 
@@ -47,7 +50,7 @@ func retryApiDecorator(apiFunc func() (string, error), decoratorResultChan chan 
 		timeAfter := time.After(d)
 
 		// 单次接口结果
-		apiResChan := make(chan DecoratorRetryApiResult, 1)
+		apiResChan := make(chan DecoratorRetryApiResult)
 		// 单次接口错误
 		apiErrorChan := make(chan bool)
 
@@ -91,7 +94,7 @@ func main() {
 
 	countRetry := 3      // 重试次数（总请求数 = 重试次数 + 1）
 	timeoutResponse := 5 // 响应超时时间（单次请求）
-	resultChan := make(chan DecoratorRetryApiResult, 1)
+	resultChan := make(chan DecoratorRetryApiResult)
 
 	go retryApiDecorator(doErrorApiRequest, resultChan, countRetry, timeoutResponse)
 
