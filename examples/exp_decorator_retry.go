@@ -49,8 +49,8 @@ func retryApiDecorator(apiFunc func() (string, error), decoratorResultChan chan 
 		d := time.Duration(timeout) * time.Second
 		timeAfter := time.After(d)
 
-		// 单次接口结果
-		apiResChan := make(chan DecoratorRetryApiResult)
+		// 单次接口结果（必须设置缓冲，防止apiFunc的goroutine阻塞）
+		apiResChan := make(chan DecoratorRetryApiResult, 1)
 		// 单次接口错误
 		apiErrorChan := make(chan bool)
 
@@ -94,7 +94,7 @@ func main() {
 
 	countRetry := 3      // 重试次数（总请求数 = 重试次数 + 1）
 	timeoutResponse := 5 // 响应超时时间（单次请求）
-	resultChan := make(chan DecoratorRetryApiResult)
+	resultChan := make(chan DecoratorRetryApiResult, 1)
 
 	go retryApiDecorator(doErrorApiRequest, resultChan, countRetry, timeoutResponse)
 
