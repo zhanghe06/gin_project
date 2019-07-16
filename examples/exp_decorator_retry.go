@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/lunny/log"
 	"github.com/pkg/errors"
 	"math/rand"
@@ -15,7 +16,7 @@ type DecoratorRetryApiResult struct {
 // 模拟接口请求发起
 func doErrorApiRequest() (string, error) {
 	seededRand := rand.New(rand.NewSource(time.Now().UnixNano()))
-	numRand := seededRand.Intn(2)
+	numRand := seededRand.Intn(3)
 	// 随机返回异常
 	switch numRand {
 	// 错误
@@ -25,6 +26,9 @@ func doErrorApiRequest() (string, error) {
 	case 1:
 		time.Sleep(10 * time.Second)
 		return "", errors.New("api timeout")
+	// 恐慌
+	case 2:
+		panic("api panic")
 	// 正常
 	default:
 		return "1", nil
@@ -56,6 +60,15 @@ func retryApiDecorator(apiFunc func() (string, error), decoratorResultChan chan 
 
 		log.Info("[request ] start")
 		go func(apiResChan chan DecoratorRetryApiResult) {
+			// panic recover
+			defer func() {
+				if rec := recover(); rec != nil {
+					err := fmt.Errorf("%v", rec)
+					apiResChan <- DecoratorRetryApiResult{"", err}
+					apiErrorChan <- true
+					return
+				}
+			}()
 			res, err := apiFunc()
 			apiResChan <- DecoratorRetryApiResult{res, err}
 
@@ -77,6 +90,8 @@ func retryApiDecorator(apiFunc func() (string, error), decoratorResultChan chan 
 		// 单次请求错误
 		case <-apiErrorChan:
 			log.Info("[response] error")
+			errData := <-apiResChan
+			log.Info("[response]", "data:", errData.ApiData, "; error:", errData.ApiError)
 		// 单次请求超时
 		case <-timeAfter:
 			log.Info("[response] timeout")
@@ -94,7 +109,7 @@ func main() {
 
 	countRetry := 3      // 重试次数（总请求数 = 重试次数 + 1）
 	timeoutResponse := 5 // 响应超时时间（单次请求）
-	resultChan := make(chan DecoratorRetryApiResult, 1)
+	resultChan := make(chan DecoratorRetryApiResult)
 
 	go retryApiDecorator(doErrorApiRequest, resultChan, countRetry, timeoutResponse)
 
