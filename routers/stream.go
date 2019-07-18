@@ -5,6 +5,6 @@ import (
 )
 
 func RegisterStream() {
-	Ver.GET("/stream/sse", controllers.StreamSSEHandler)
-	Ver.GET("/stream/crd", controllers.StreamCRDHandler)
+	RouterGroupVer.GET("/stream/sse", controllers.StreamSSEHandler)
+	RouterGroupVer.GET("/stream/crd", controllers.StreamCRDHandler)
 }

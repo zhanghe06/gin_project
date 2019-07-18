@@ -6,6 +6,6 @@ import (
 )
 
 func RegisterInfo() {
-	Ver.Use(middlewares.ApiTokenAuthMiddleware())
-	Ver.GET("/info", controllers.GetInfoHandler)
+	RouterGroupVer.Use(middlewares.ApiTokenAuthMiddleware())
+	RouterGroupVer.GET("/info", controllers.GetInfoHandler)
 }

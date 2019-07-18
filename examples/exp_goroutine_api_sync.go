@@ -7,9 +7,9 @@ import (
 )
 
 /*
-* 外部同步接口处理
-* 业务场景：外部接口耗时，需要转为异步处理结果
-*/
+ * 外部同步接口处理
+ * 业务场景：外部接口耗时，需要转为异步处理结果
+ */
 
 type SyncApiData string
 type SyncApiError error

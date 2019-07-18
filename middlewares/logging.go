@@ -4,13 +4,15 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/gin-gonic/gin"
-	log "github.com/sirupsen/logrus"
-	"github.com/spf13/viper"
-	"github.com/zhanghe06/gin_project/logs"
 	"io"
 	"io/ioutil"
 	"time"
+
+	"github.com/gin-gonic/gin"
+	log "github.com/sirupsen/logrus"
+	"github.com/spf13/viper"
+
+	"github.com/zhanghe06/gin_project/logs"
 )
 
 func LoggingMiddleware() gin.HandlerFunc {
@@ -23,7 +25,7 @@ func LoggingMiddleware() gin.HandlerFunc {
 		// Read the whole body
 		_, err := io.Copy(bodyCopy, c.Request.Body)
 		if err != nil {
-			return  // 退出中间件
+			return // 退出中间件
 		}
 		bodyData := bodyCopy.Bytes()
 		// Replace the body with a reader that reads from the buffer
@@ -56,6 +58,7 @@ func LoggingMiddleware() gin.HandlerFunc {
 			"client_ip":      clientIP,
 			"host":           c.Request.Host,
 			"method":         method,
+			"request_id":     c.Writer.Header().Get("X-Request-Id"),
 			"request_uri":    c.Request.RequestURI,
 			"request_params": requestParams,
 			"status_code":    statusCode,

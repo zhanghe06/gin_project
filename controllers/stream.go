@@ -2,10 +2,11 @@ package controllers
 
 import (
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"io"
 	"net/http"
 	"time"
+
+	"github.com/gin-gonic/gin"
 )
 
 // 流式请求（利用 H5 的新特性 SSE）

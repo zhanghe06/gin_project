@@ -1,14 +1,19 @@
 package controllers
 
 import (
-	"github.com/gin-gonic/gin"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 // 关于页面
 // curl -i -X GET http://0.0.0.0:8080/about
 func GetAboutHandler(c *gin.Context) {
-	c.HTML(http.StatusOK, "index.tmpl", gin.H{
+	// 传递requestId
+	requestId := c.Writer.Header().Get("X-Request-Id")
+
+	c.HTML(http.StatusOK, "about.tmpl", gin.H{
 		"title": "About website",
+		"requestId": requestId,
 	})
 }

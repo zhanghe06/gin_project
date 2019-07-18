@@ -5,5 +5,5 @@ import (
 )
 
 func RegisterToken() {
-	VerToken.GET("/token", controllers.GetTokenHandler)
+	RouterGroupVerToken.GET("/token", controllers.GetTokenHandler)
 }
