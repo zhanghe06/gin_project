@@ -20,4 +20,14 @@ func main() {
 	// 当前格式化时间
 	fmt.Println(time.Now().Format("2006-01-02 15:04:05"))
 	// 这是个奇葩,必须是这个时间点, 据说是go诞生之日, 记忆方法:6-1-2-3-4-5
+
+	// 时间偏移
+	//am, _ := time.ParseDuration("5m")
+	//sm, _ := time.ParseDuration("-5s")
+	//
+	//fmt.Println(time.Now().Add(am).Add(sm))
+
+	am, _ := time.ParseDuration(fmt.Sprintf("%dm", 5))
+	sm, _ := time.ParseDuration(fmt.Sprintf("-%ds", 5))
+	fmt.Println(time.Now().Add(am).Add(sm))
 }
