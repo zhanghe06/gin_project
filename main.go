@@ -62,13 +62,13 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	// 仅仅打印消息
+	// 仅仅打印消息（含异常处理，守护运行）
+	i := 0
 	go func() {
-		for message := range messages {
-			log.Printf(" [x] %s", message)
-			panic("123456")
-			//err = errors.New("123456")
-			//return
+		for {
+			i++
+			rabbitmq.Consumer.Print(messages)
+			log.Printf(" [x] RabbitMQ Print Msg Retry: %d", i)
 		}
 	}()
 

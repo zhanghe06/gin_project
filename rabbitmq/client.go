@@ -86,7 +86,7 @@ func (mq *ClientRabbitMQ) QueueBinds(ex string, bindingKeys []string) (err error
 }
 
 //func (mq *ClientRabbitMQ) Consume() (mqMsg <-chan amqp.Delivery, err error) {
-func (mq *ClientRabbitMQ) Consume(message chan []byte) (err error) {
+func (mq *ClientRabbitMQ) Consume(messages chan []byte) (err error) {
 	var deliveries <-chan amqp.Delivery
 	deliveries, err = mq.channel.Consume(
 		mq.queue.Name, // queue
@@ -102,12 +102,12 @@ func (mq *ClientRabbitMQ) Consume(message chan []byte) (err error) {
 	}
 
 	// 将消息通过channel传递出去
-	go func(deliveries <-chan amqp.Delivery, done chan bool, message chan []byte) {
+	go func(deliveries <-chan amqp.Delivery, done chan bool, messages chan []byte) {
 		for d := range deliveries {
-			message <- d.Body
+			messages <- d.Body
 		}
 		done <- true
-	}(deliveries, mq.done, message)
+	}(deliveries, mq.done, messages)
 	return
 }
 
@@ -123,6 +123,20 @@ func (mq *ClientRabbitMQ) Publish(ex string, rk string, body string) (err error)
 			Body:        []byte(body),
 		})
 	return
+}
+
+func (mq *ClientRabbitMQ) Print(messages chan []byte) {
+	defer func() {
+		if rec := recover(); rec != nil {
+			err := fmt.Errorf("%v", rec)
+			log.Printf(" [x] ERROR: %s", err.Error())
+			return
+		}
+	}()
+	for message := range messages {
+		log.Printf(" [x] %s", message)
+		panic("123456") // 测试panic
+	}
 }
 
 func (mq *ClientRabbitMQ) Keepalive() {
