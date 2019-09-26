@@ -2,6 +2,8 @@ package main
 
 import (
 	"log"
+	"math/rand"
+	"time"
 
 	"github.com/streadway/amqp"
 )
@@ -36,7 +38,7 @@ func main() {
 
 	err = ch.ExchangeDeclare(
 		ex,      // name
-		"topic", // type
+		amqp.ExchangeTopic, // type
 		true,    // durable
 		false,   // auto-deleted
 		false,   // internal
@@ -67,10 +69,14 @@ func main() {
 		failOnErrorGet(err, "Failed to bind a queue")
 	}
 
+	// 限制预取数量 [https://www.rabbitmq.com/confirms.html#channel-qos-prefetch]
+	err = ch.Qos(1, 0, true)
+	failOnErrorGet(err, "Failed to set channel qos")
+
 	msg, err := ch.Consume(
 		q.Name, // queue
 		"",     // consumer
-		true,   // auto ack
+		false,   // auto ack
 		false,  // exclusive
 		false,  // no local
 		false,  // no wait
@@ -82,7 +88,27 @@ func main() {
 
 	go func() {
 		for d := range msg {
-			log.Printf(" [x] %s", d.Body)
+			log.Printf(" [x] %s, %d", d.Body, d.DeliveryTag)
+
+			seededRand := rand.New(rand.NewSource(time.Now().UnixNano()))
+			numRand := seededRand.Intn(3)
+			// 随机场景
+			switch numRand {
+			// 确认删除
+			case 0:
+				time.Sleep(10*time.Second)
+				log.Printf(" [x] Ack")
+				_ = d.Ack(false)
+			// 重新入队
+			case 1:
+				log.Printf(" [x] Nack")
+				// 如果不确认，则一直等待，当进程退出时，消息才会返回队列
+				_ = d.Nack(false, true)
+			// 立即丢弃
+			case 2:
+				log.Printf(" [x] Reject")
+				_ = d.Reject(false)
+			}
 		}
 	}()
 

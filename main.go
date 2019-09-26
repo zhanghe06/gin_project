@@ -55,10 +55,19 @@ func main() {
 		log.Fatal(err)
 	}
 
+	// 消息发送[测试数据]
+	ex := "ex.project.topic"
+	rk := "rk.project"
+	body := "test msg"
+	err = rabbitmq.MQ.Publish(ex, rk, body)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	// 消息处理
 	messages := make(chan []byte)
 
-	err = rabbitmq.Consumer.Consume(messages)
+	err = rabbitmq.MQ.Consume(messages)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -67,7 +76,7 @@ func main() {
 	go func() {
 		for {
 			i++
-			rabbitmq.Consumer.Print(messages)
+			rabbitmq.MQ.Print(messages)
 			log.Printf(" [x] RabbitMQ Print Msg Retry: %d", i)
 		}
 	}()

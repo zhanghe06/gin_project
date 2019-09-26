@@ -15,28 +15,33 @@ go get -u github.com/kardianos/govendor
 ```
 # 初始化govendor
 govendor init
-# 从GOPATH拷贝当前代码所需依赖到当前vendor目录下
+# 从$GOPATH拷贝当前代码所需依赖到当前vendor目录下，并更新vendor.json
 govendor add +e
 ```
 
-安装项目依赖
+vendor.json
+```
+package.path            # 依赖文件路径
+package.revision        # git commit 编号
+package.revisionTime    # git commit 时间（UTC）
+```
+
+更新项目依赖
+```
+govendor add +e     # 追加新增依赖
+govendor update +v  # 更新现有依赖
+```
+一般情况，开发者，会用到 add 和 update，都是从$GOPATH拉取到vendor，并更新vendor.json
+
+
+拉取项目依赖
 ```
 govendor sync
 ```
+一般情况，使用者，直接使用 sync 就好了，直接更新到vendor目录
 
-添加项目依赖
-```
-govendor add +e
-```
-
-更新项目依赖（新增依赖 + 更新已有依赖）
-```
-govendor add +e
-govendor update +v
-```
 
 中国特色依赖
-
 ```
 Error: Remotes failed for:
 	Failed for "cloud.google.com/go/civil" (failed to ping remote repo): unrecognized import path "cloud.google.com/go/civil"
@@ -72,4 +77,9 @@ export https_proxy=http://127.0.0.1:1087
 ```
 unset http_proxy
 unset https_proxy
+```
+
+排错（govendor sync报错，清除缓存）
+```
+rm -rf $GOPATH/.cache/govendor
 ```

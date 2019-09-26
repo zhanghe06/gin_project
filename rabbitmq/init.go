@@ -20,7 +20,7 @@ var BindingKeys = []string{
 //	}
 //}
 
-var Consumer = new(ClientRabbitMQ)
+var MQ = new(ClientRabbitMQ)
 
 func Init() (err error) {
 	//defer func() {
@@ -29,29 +29,32 @@ func Init() (err error) {
 	//		return
 	//	}
 	//}()
-	err = Consumer.Connect()
+	err = MQ.Connect()
 	if err != nil {
 		return
 	}
-	err = Consumer.Channel()
+	err = MQ.Channel()
 	if err != nil {
 		return
 	}
-	Consumer.notifyClose = make(chan *amqp.Error)
-	Consumer.channel.NotifyClose(Consumer.notifyClose) // channel connection 断开均通知
-	Consumer.done = make(chan bool)
 
-	//go Consumer.Keepalive()
+	MQ.notifyClose = make(chan *amqp.Error)
+	MQ.notifyConfirm = make(chan amqp.Confirmation)
+	MQ.channel.NotifyClose(MQ.notifyClose)     // channel connection 断开均通知
+	MQ.channel.NotifyPublish(MQ.notifyConfirm) // 消息发送确认通知
+	MQ.done = make(chan bool)
 
-	err = Consumer.ExchangeDeclare(Exchange)
+	//go MQ.Keepalive()
+
+	err = MQ.ExchangeDeclare(Exchange)
 	if err != nil {
 		return
 	}
-	err = Consumer.QueueDeclare(QueueName)
+	err = MQ.QueueDeclare(QueueName)
 	if err != nil {
 		return
 	}
-	err = Consumer.QueueBinds(Exchange, BindingKeys)
+	err = MQ.QueueBinds(Exchange, BindingKeys)
 	if err != nil {
 		return
 	}
@@ -60,6 +63,6 @@ func Init() (err error) {
 }
 
 func Close() {
-	_ = Consumer.channel.Close()
-	_ = Consumer.conn.Close()
+	_ = MQ.channel.Close()
+	_ = MQ.conn.Close()
 }

@@ -40,13 +40,19 @@ func (mq *ClientRabbitMQ) Channel() (err error) {
 		log.Printf("[amqp] get channel error: %s\n", err)
 		return
 	}
+	// 通道设置为Confirm模式
+	err = mq.channel.Confirm(false)
+	if err != nil {
+		log.Printf("[amqp] set channel confirm error: %s\n", err)
+		return
+	}
 	return
 }
 
 func (mq *ClientRabbitMQ) ExchangeDeclare(ex string) (err error) {
 	err = mq.channel.ExchangeDeclare(
 		ex,      // name
-		"topic", // type
+		amqp.ExchangeTopic, // type
 		true,    // durable
 		false,   // auto-deleted
 		false,   // internal
@@ -122,6 +128,25 @@ func (mq *ClientRabbitMQ) Publish(ex string, rk string, body string) (err error)
 			ContentType: "text/plain",
 			Body:        []byte(body),
 		})
+	if err != nil {
+		return
+	}
+
+	// 消息确认超时时间
+	confirmTimeout := time.After(time.Duration(10) * time.Second)
+
+	select {
+	case confirm := <-mq.notifyConfirm:
+		if !confirm.Ack {
+			//log.Printf(" [x] ERROR: publish confirm error")
+			err = fmt.Errorf("%v", "publish confirm error")
+		}
+	case <-mq.notifyClose:
+		err = fmt.Errorf("%v", "channel close")
+	case <-confirmTimeout:
+		err = fmt.Errorf("%v", "confirm timeout")
+	}
+
 	return
 }
 

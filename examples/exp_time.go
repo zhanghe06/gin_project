@@ -30,4 +30,9 @@ func main() {
 	am, _ := time.ParseDuration(fmt.Sprintf("%dm", 5))
 	sm, _ := time.ParseDuration(fmt.Sprintf("-%ds", 5))
 	fmt.Println(time.Now().Add(am).Add(sm))
+
+	// UTC 时间
+	fmt.Println(time.Now().Format(time.RFC3339))
+	fmt.Println(time.Now().UTC().Format(time.RFC3339))
+	fmt.Println(time.Now().UTC().Format("2006-01-02T15:04:05Z"))
 }
