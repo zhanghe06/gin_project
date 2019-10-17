@@ -13,6 +13,7 @@ type ClientRabbitMQ struct {
 	conn          *amqp.Connection
 	channel       *amqp.Channel
 	queue         amqp.Queue
+	messages 	  chan []byte
 	done          chan bool
 	notifyClose   chan *amqp.Error       // 异常关闭
 	notifyConfirm chan amqp.Confirmation // 消息发送成功确认
@@ -150,7 +151,7 @@ func (mq *ClientRabbitMQ) Publish(ex string, rk string, body string) (err error)
 	return
 }
 
-func (mq *ClientRabbitMQ) Print(messages chan []byte) {
+func (mq *ClientRabbitMQ) Print() {
 	defer func() {
 		if rec := recover(); rec != nil {
 			err := fmt.Errorf("%v", rec)
@@ -158,29 +159,31 @@ func (mq *ClientRabbitMQ) Print(messages chan []byte) {
 			return
 		}
 	}()
-	for message := range messages {
+	for message := range mq.messages {
 		log.Printf(" [x] %s", message)
 		panic("123456") // 测试panic
 	}
 }
 
 func (mq *ClientRabbitMQ) Keepalive() {
-	// fixme
+	// 断线重连
+	c := 0
 	for {
-		for i := 0; i < 3; i++ {
-			time.Sleep(5 * time.Second)
-			if err := Init(); err != nil {
-				log.Printf("[ERROR] MQ: Connection recover failed for %d times, %v\n", i+1, err)
-				continue
-			}
-			log.Printf("[INFO] MQ: Connection recover OK. Total try %d times\n", i+1)
-			break
-		}
 		select {
 		case <-mq.done:
-			return
+			log.Printf("[ERROR] MQ: Connection/Channel done")
+			//return
 		case <-mq.notifyClose:
-			log.Printf("关啦")
+			log.Printf("[ERROR] MQ: Connection/Channel closed")
 		}
+		c++
+		time.Sleep(1 * time.Second)
+		if err := Init(); err != nil {
+			log.Printf("[ERROR] MQ: Connection failed for %d times, %v\n", c, err)
+			continue
+		}
+		log.Printf("[INFO] MQ: Connection OK. Total try %d times\n", c)
+		// 还原计数
+		c = 0
 	}
 }

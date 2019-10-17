@@ -39,6 +39,9 @@ func main() {
 	}
 	defer rabbitmq.Close()
 
+	// 断线重连
+	go rabbitmq.MQ.Keepalive()
+
 	// 初始化ETCD
 	//err = etcds.Init()
 	//if err != nil {
@@ -59,27 +62,11 @@ func main() {
 	ex := "ex.project.topic"
 	rk := "rk.project"
 	body := "test msg"
+
 	err = rabbitmq.MQ.Publish(ex, rk, body)
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	// 消息处理
-	messages := make(chan []byte)
-
-	err = rabbitmq.MQ.Consume(messages)
-	if err != nil {
-		log.Fatal(err)
-	}
-	// 仅仅打印消息（含异常处理，守护运行）
-	i := 0
-	go func() {
-		for {
-			i++
-			rabbitmq.MQ.Print(messages)
-			log.Printf(" [x] RabbitMQ Print Msg Retry: %d", i)
-		}
-	}()
 
 	// 启动服务
 	err = router.Run()

@@ -1,6 +1,7 @@
 package rabbitmq
 
 import (
+	log "github.com/sirupsen/logrus"
 	"github.com/streadway/amqp"
 )
 
@@ -44,8 +45,6 @@ func Init() (err error) {
 	MQ.channel.NotifyPublish(MQ.notifyConfirm) // 消息发送确认通知
 	MQ.done = make(chan bool)
 
-	//go MQ.Keepalive()
-
 	err = MQ.ExchangeDeclare(Exchange)
 	if err != nil {
 		return
@@ -58,6 +57,24 @@ func Init() (err error) {
 	if err != nil {
 		return
 	}
+
+	// 消息处理
+	MQ.messages = make(chan []byte)
+
+	err = MQ.Consume(MQ.messages)
+	if err != nil {
+		return
+	}
+
+	// 仅仅打印消息（含异常处理，守护运行）
+	i := 0
+	go func() {
+		for {
+			i++
+			MQ.Print()
+			log.Printf(" [x] RabbitMQ Print Msg Retry: %d", i)
+		}
+	}()
 
 	return
 }
