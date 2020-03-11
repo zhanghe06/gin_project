@@ -155,7 +155,7 @@ func (mq *ClientRabbitMQ) Print() {
 	defer func() {
 		if rec := recover(); rec != nil {
 			err := fmt.Errorf("%v", rec)
-			log.Printf(" [x] ERROR: %s", err.Error())
+			log.Printf(" [x] PANIC ERROR: %s", err.Error())
 			return
 		}
 	}()

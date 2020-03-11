@@ -55,5 +55,5 @@ func Init() (err error) {
 
 func Close() {
 	//F.Close()
-	Fl.Close()
+	_ = Fl.Close()
 }

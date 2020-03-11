@@ -37,6 +37,12 @@ func LoggingMiddleware() gin.HandlerFunc {
 		decoder := json.NewDecoder(bodyCopy)
 		var paramsMap map[string]interface{}
 		if err = decoder.Decode(&paramsMap); err == nil {
+			// 数据脱敏
+			// delete(paramsMap, "password")
+			if _, ok := paramsMap["password"]; ok {
+				paramsMap["password"] = "******"
+			}
+
 			paramsByte, e := json.Marshal(paramsMap)
 			if e == nil {
 				requestParams = string(paramsByte) // 反向解析
