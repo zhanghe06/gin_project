@@ -12,10 +12,15 @@ import (
  *
  * panic 仅保证当前 goroutine 下的 defer 都会被调到，但不保证其他协程的 defer 也会调到。
  * 以下示例中，main defer 并未执行
+ *
+ * 结论:
+ * 1. goroutine panic 会引发整个程序退出
+ * 2. goroutine panic 外部无法直接捕获
+ * 3. goroutine panic 可以在内部通过 defer 来 recover
  */
 func main() {
 	defer func() {
-		fmt.Println("main defer")
+		fmt.Println("main defer")  // 执行不到
 	}()
 	go func() {
 		defer func() {
@@ -35,13 +40,14 @@ func main() {
 
 	fmt.Println("main info")
 	time.Sleep(1 * time.Second)
+	fmt.Println("main sleep")  // 执行不到
 
 	// main panic
-	panic("main panic")
+	panic("main panic")  // 执行不到
 }
 
 /*
- * 执行结果
+ * 执行结果(开启sleep)
  * -----------------------------
  * main info
  * goroutine info
@@ -53,4 +59,18 @@ func main() {
  * 	/Users/zhanghe/work/src/github.com/zhanghe06/gin_project/examples/exp_panic.go:20 +0xb2
  * created by main.main
  * 	/Users/zhanghe/work/src/github.com/zhanghe06/gin_project/examples/exp_panic.go:13 +0x39
+ */
+
+
+/*
+ * 执行结果(关闭sleep)
+ * -----------------------------
+ * main info
+ * main sleep
+ * panic: main panic
+ *
+ * goroutine 1 [running]:
+ * main defer
+ * main.main()
+ * /Users/zhanghe/work/src/github.com/zhanghe06/gin_project/examples/exp_panic.go:40 +0x127
  */

@@ -29,5 +29,5 @@ func f(i I){
 
 func main() {
 	s := S{}
-	f(&s)  //4
+	f(&s)  //10
 }
